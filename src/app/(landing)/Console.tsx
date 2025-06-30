@@ -13,8 +13,12 @@ export default function Console({
   showButtons?: boolean;
 }) {
   return (
-    <div className="w-[300px] h-auto relative">
-      <Image src={consoleImg} alt="Console" className="w-full h-auto" />
+    <div className="w-full h-full relative">
+      <Image
+        src={consoleImg}
+        alt="Console"
+        className="w-full h-full object-contain"
+      />
     </div>
   );
 }
