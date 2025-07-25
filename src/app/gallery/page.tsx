@@ -10,7 +10,7 @@ const GalleryPage = () => {
 
   return (
     <div
-      className={`min-h-screen flex items-center justify-center ${textColor}`}
+      className={`fixed inset-0 overflow-hidden flex items-center justify-center ${textColor}`}
       style={{
         backgroundImage: `
           linear-gradient(to right, ${gridOpacity} 1px, transparent 1px),
@@ -22,7 +22,7 @@ const GalleryPage = () => {
         backgroundPosition: "top left, top left, center",
       }}
     >
-      <div className="absolute top-4 left-4 z-50">
+      <div className="absolute top-4 left-4 z-50 w-full h-screen">
         <Image
           src="/Logo.svg"
           alt="MIC Logo"
@@ -36,9 +36,40 @@ const GalleryPage = () => {
         <Image
           src="/Subtract.png"
           alt="galleryPage"
-          width={684}
+          width={710}
           height={684}
           className="h-[780px]"
+        />
+      </div>
+
+      <div className="absolute z-100" style={{ top: "55px", left: "730px" }}>
+        <div className="relative h-[780px] w-[53px] z-100">
+          <Image
+            src="/Rectangle 15273.png"
+            alt="galleryPage"
+            fill
+            className="absolute"
+          />
+        </div>
+      </div>
+
+      <div className="absolute" style={{ top: "55px", right: "34px" }}>
+        <Image
+          src="/SubtractRight.png"
+          alt=""
+          width={710}
+          height={684}
+          className="h-[780px]"
+        />
+      </div>
+
+      <div className="absolute top-[88px] left-[695px] z-50">
+        <Image
+          src="/Group 415.png"
+          alt="galleryPage"
+          width={120}
+          height={400}
+          className="h-[720px]"
         />
       </div>
 
