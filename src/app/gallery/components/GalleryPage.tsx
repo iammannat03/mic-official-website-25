@@ -153,7 +153,7 @@ const GalleryPage = () => {
         </div>
       </div>
 
-      <div className="absolute top-[450px] left-0 right-0 flex flex-col gap-[80px] items-end px-[80px] z-30">
+      <div className="absolute top-[450px] left-0 right-0 flex flex-col gap-[50px] items-end px-[80px] z-30">
         <AnimatePresence mode="wait">
           <motion.div
             key={`top-${currentPage}`}
@@ -191,12 +191,24 @@ const GalleryPage = () => {
                     height={160}
                   />
                 </div>
+
+                {idx === 1 && (
+                  <Image
+                    src="/leafIcon.png"
+                    alt="star"
+                    width={40}
+                    height={40}
+                    className="absolute top-[-10px] right-[-10px] z-30"
+                    style={{ imageRendering: "pixelated" }}
+                  />
+                )}
+
               </div>
             ))}
           </motion.div>
-          <div className="absolute bottom-3 right-12 z-50">
+          <div className="absolute bottom-8 right-[610px] z-50">
             <Image
-              src="/heaart.svg"
+              src="/heartIcon.png"
               alt="Corner decoration"
               width={120}
               height={120}
@@ -242,6 +254,18 @@ const GalleryPage = () => {
                     height={160}
                   />
                 </div>
+
+                {idx === 2 && (
+                  <Image
+                    src="/starIcon.png" 
+                    alt="star"
+                    width={40}
+                    height={40}
+                    className="absolute top-[-10px] right-[-10px] z-30"
+                    style={{ imageRendering: "pixelated" }}
+                  />
+                )}
+
               </div>
             ))}
           </motion.div>
