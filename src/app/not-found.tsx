@@ -72,6 +72,24 @@ const NotFoundPage: React.FC = () => {
   const c7 = useCloudFloat({ baseTop: 10, baseLeft: 400, amplitude: 12, speed: 1.05, phase: 6 });
 
   const [menuOpen, setMenuOpen] = useState(false);
+  // Theme detection
+  const [isDark, setIsDark] = useState(true);
+  useEffect(() => {
+    if (typeof window !== 'undefined' && window.matchMedia) {
+      const mq = window.matchMedia('(prefers-color-scheme: dark)');
+      setIsDark(mq.matches);
+      const handler = (e: MediaQueryListEvent) => setIsDark(e.matches);
+      mq.addEventListener ? mq.addEventListener('change', handler) : mq.addListener(handler);
+      return () => {
+        mq.removeEventListener ? mq.removeEventListener('change', handler) : mq.removeListener(handler);
+      };
+    }
+  }, []);
+
+  // Choose gradient based on theme
+  const gradientBg = isDark
+    ? "linear-gradient(180deg, rgba(0,8,16,0.95) 0%, rgba(23,72,98,0.95) 34%, rgba(17,51,115,0.95) 71%, rgba(25,44,85,0.95) 100%)"
+    : "linear-gradient(180deg, rgba(179,217,255,0.85) 0%, rgba(179,229,255,0.85) 34%, rgba(177,240,252,0.85) 71%, rgba(176,249,250,0.85) 100%) repeat-y";
 
   return (
     <>
@@ -86,7 +104,7 @@ const NotFoundPage: React.FC = () => {
       />
       {/* Gradient overlay */}
       <div className="pointer-events-none fixed inset-0 z-10" style={{
-        background: "linear-gradient(180deg, rgba(0,8,16,0.95) 0%, rgba(23,72,98,0.95) 34%, rgba(17,51,115,0.95) 71%, rgba(25,44,85,0.95) 100%)",
+        background: gradientBg,
         mixBlendMode: "multiply"
       }} />
       <div className="relative min-h-screen w-full overflow-hidden flex items-center justify-center z-20" style={{ fontFamily: 'Press Start 2P, monospace' }}>
