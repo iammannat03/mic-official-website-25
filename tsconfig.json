@@ -26,6 +26,6 @@
     "**/*.ts",
     "**/*.tsx",
     ".next/types/**/*.ts"
-  ],
+, "gallery.jsx"  ],
   "exclude": ["node_modules"]
 }
