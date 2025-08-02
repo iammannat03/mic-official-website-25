@@ -1,19 +1,31 @@
 import Image from "next/image";
 
 const clouds = [
-  { src: "/images/cloud1.png", alt: "Cloud", width: 100, height: 50, style: { top: 60, left: 200 } },
-  { src: "/images/cloud2.png", alt: "Cloud", width: 80, height: 40, style: { top: 120, left: 600 } },
-  { src: "/images/cloud3.png", alt: "Cloud", width: 110, height: 55, style: { top: 300, left: 400 } },
-  { src: "/images/cloud1.png", alt: "Cloud", width: 90, height: 45, style: { top: 400, left: 800 } },
-  { src: "/images/cloud2.png", alt: "Cloud", width: 80, height: 40, style: { top: 200, left: 1000 } },
-  { src: "/images/cloud1.png", alt: "Cloud", width: 60, height: 30, style: { top: 500, left: 100 } },
-  { src: "/images/cloud2.png", alt: "Cloud", width: 60, height: 30, style: { top: 600, left: 900 } },
+  // Fewer, larger, and more spaced-out clouds
+  { src: "/images/cloud1.png", alt: "Cloud", width: 300, height: 150, style: { top: 60, left: 120, zIndex: 0 } },    // behind
+  { src: "/images/cloud2.png", alt: "Cloud", width: 250, height: 120, style: { top: 180, left: 700, zIndex: 2 } },   // front
+  { src: "/images/cloud3.png", alt: "Cloud", width: 320, height: 160, style: { top: 350, left: 400, zIndex: 0 } },   // behind
+  { src: "/images/cloud1.png", alt: "Cloud", width: 220, height: 110, style: { top: 500, left: 950, zIndex: 2 } },   // front
+  { src: "/images/cloud2.png", alt: "Cloud", width: 200, height: 100, style: { top: 600, left: 200, zIndex: 0 } },   // behind
+  // Additional clouds for more coverage and spacing
+  { src: "/images/cloud1.png", alt: "Cloud", width: 260, height: 130, style: { top: 80, left: 500, zIndex: 0 } },    // behind
+  { src: "/images/cloud2.png", alt: "Cloud", width: 210, height: 105, style: { top: 250, left: 1000, zIndex: 2 } },  // front
+  { src: "/images/cloud3.png", alt: "Cloud", width: 280, height: 140, style: { top: 420, left: 700, zIndex: 0 } },   // behind
+  { src: "/images/cloud1.png", alt: "Cloud", width: 240, height: 120, style: { top: 150, left: 300, zIndex: 2 } },   // front
+  { src: "/images/cloud2.png", alt: "Cloud", width: 230, height: 115, style: { top: 520, left: 400, zIndex: 0 } },   // behind
+  { src: "/images/cloud3.png", alt: "Cloud", width: 250, height: 125, style: { top: 80, left: 900, zIndex: 2 } },    // front
+
+  // --- Added clouds to the right side ---
+  { src: "/images/cloud1.png", alt: "Cloud", width: 300, height: 150, style: { top: 100, left: 1100, zIndex: 0 } },   // behind
+  { src: "/images/cloud2.png", alt: "Cloud", width: 250, height: 120, style: { top: 250, left: 1300, zIndex: 2 } },   // front
+  { src: "/images/cloud3.png", alt: "Cloud", width: 320, height: 160, style: { top: 400, left: 1100, zIndex: 0 } },   // behind
+  { src: "/images/cloud1.png", alt: "Cloud", width: 220, height: 110, style: { top: 550, left: 1400, zIndex: 2 } },   // front
+  { src: "/images/cloud2.png", alt: "Cloud", width: 200, height: 100, style: { top: 650, left: 1200, zIndex: 0 } },   // behind
 ];
 
-// Social icons and their pipe positions
 const socialIcons = [
   {
-    href: "mailto:your@email.com",
+    href: "https://mail.google.com/mail/u/0/#inbox?compose=CllgCKHRLsSBsQdMlSszGrlrxQxSjHMzgMBpLTXMjRKBQHhRTQQtMhZxDcbgbTbXNpPNhzVcTcL",
     src: "/images/mail.png",
     alt: "Email",
     width: 60,
@@ -21,8 +33,6 @@ const socialIcons = [
     aria: "Send Email",
     pipeLeft: 160,
     pipeHeight: 320,
-    iconTop: 180,
-    iconLeft: 100,
     upright: true,
   },
   {
@@ -33,9 +43,7 @@ const socialIcons = [
     height: 60,
     aria: "Instagram",
     pipeLeft: 470,
-    pipeHeight: 250,
-    iconTop: 120,
-    iconLeft: 470,
+    pipeHeight: 220,
     upright: false,
   },
   {
@@ -47,8 +55,6 @@ const socialIcons = [
     aria: "LinkedIn",
     pipeLeft: 720,
     pipeHeight: 180,
-    iconTop: 80,
-    iconLeft: 720,
     upright: true,
   },
   {
@@ -59,18 +65,15 @@ const socialIcons = [
     height: 60,
     aria: "Menu",
     pipeLeft: 1000,
-    pipeHeight: 300,
-    iconTop: 200,
-    iconLeft: 1000,
+    pipeHeight: 270,
     upright: false,
   },
 ];
 
-// Set the actual height of your pipebranch image here:
-const PIPE_BRANCH_HEIGHT = 80; // px, adjust to your actual image height
-const PIPE_WIDTH = 120; // px, adjust to your actual image width
-const PIPE_HEAD_WIDTH = 160; // px, should be wider than branch for protrusion
-const PIPE_HEAD_HEIGHT = 40; // px
+const PIPE_BRANCH_HEIGHT = 80;
+const PIPE_WIDTH = 120;
+const PIPE_HEAD_WIDTH = 160;
+const PIPE_HEAD_HEIGHT = 60;
 
 export default function SocialPage() {
   return (
@@ -104,7 +107,13 @@ export default function SocialPage() {
           alt={cloud.alt}
           width={cloud.width}
           height={cloud.height}
-          style={{ position: "absolute", ...cloud.style }}
+          style={{
+            position: "absolute",
+            ...cloud.style,
+            pointerEvents: "none",
+            zIndex: cloud.style.zIndex ?? 1,
+            filter: "drop-shadow(0 2px 8px rgba(0,0,0,0.10))",
+          }}
           priority
         />
       ))}
@@ -123,6 +132,15 @@ export default function SocialPage() {
       {socialIcons.map((icon, i) => {
         const branchCount = Math.ceil(icon.pipeHeight / PIPE_BRANCH_HEIGHT);
         const isUpright = icon.upright;
+        // Overturn pipehead for 1st and 3rd pipe (i === 0 or i === 2)
+        const overturnPipeHead = i === 0 || i === 2;
+        // Calculate iconTop so icon is centered on the pipe head
+        const iconTop = isUpright
+          ? icon.pipeHeight + PIPE_HEAD_HEIGHT / 2 - icon.height / 2
+          : undefined;
+        const iconBottom = !isUpright
+          ? icon.pipeHeight + PIPE_HEAD_HEIGHT / 2 - icon.height / 2
+          : undefined;
         return (
           <div
             key={i}
@@ -151,42 +169,55 @@ export default function SocialPage() {
                 style={{ width: "100%", height: PIPE_BRANCH_HEIGHT }}
               />
             ))}
-            {/* Pipe head (protruding) */}
-            <Image
-              src="/images/pipehead.png"
-              alt="Pipe head"
-              width={PIPE_HEAD_WIDTH}
-              height={PIPE_HEAD_HEIGHT}
+            {/* Pipe head */}
+            <div
               style={{
                 width: PIPE_HEAD_WIDTH,
                 height: PIPE_HEAD_HEIGHT,
-                marginLeft: -(PIPE_HEAD_WIDTH - PIPE_WIDTH) / 2,
-                marginRight: -(PIPE_HEAD_WIDTH - PIPE_WIDTH) / 2,
-                zIndex: 2,
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+                // Overturn the pipehead if needed
+                transform: `${isUpright ? "none" : "scaleY(-1)"} ${overturnPipeHead ? "rotate(180deg)" : ""}`,
+                marginTop: -5,
               }}
-            />
+            >
+              <Image
+                src="/images/pipehead.png"
+                alt="Pipe head"
+                width={PIPE_HEAD_WIDTH}
+                height={PIPE_HEAD_HEIGHT}
+                style={{
+                  width: "100%",
+                  height: "100%",
+                  objectFit: "cover",
+                }}
+              />
+            </div>
+            {/* Social Icon aligned with pipe head */}
+            <a
+              href={icon.href}
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label={icon.aria}
+              style={{
+                position: "absolute",
+                left: (PIPE_HEAD_WIDTH - icon.width) / 2,
+                top: isUpright
+                  ? icon.pipeHeight + PIPE_HEAD_HEIGHT / 2 - icon.height / 2
+                  : undefined,
+                bottom: !isUpright
+                  ? icon.pipeHeight + PIPE_HEAD_HEIGHT / 2 - icon.height / 2
+                  : undefined,
+                zIndex: 2,
+                transform: !isUpright ? "scaleY(-1)" : "none",
+              }}
+            >
+              <Image src={icon.src} alt={icon.alt} width={icon.width} height={icon.height} />
+            </a>
           </div>
         );
       })}
-
-      {/* Social Icons */}
-      {socialIcons.map((icon, i) => (
-        <a
-          key={i}
-          href={icon.href}
-          target="_blank"
-          rel="noopener noreferrer"
-          aria-label={icon.aria}
-          style={{
-            position: "absolute",
-            top: icon.iconTop,
-            left: icon.iconLeft,
-            zIndex: 2,
-          }}
-        >
-          <Image src={icon.src} alt={icon.alt} width={icon.width} height={icon.height} />
-        </a>
-      ))}
 
       {/* Flappy Bird */}
       <Image
@@ -197,7 +228,7 @@ export default function SocialPage() {
         style={{ position: "absolute", top: 250, left: 220, zIndex: 2 }}
       />
 
-      {/* Menu Icon */}
+      {/* Menu Button */}
       <button
         aria-label="Open menu"
         style={{
