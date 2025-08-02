@@ -43,10 +43,10 @@ const NonTechSecCard: React.FC<NonTechSecCardProps> = ({ name, imageSrc }) => {
 
       {/* NAME: Insert the Non-Tech Secretary's name here. Update the 'name' prop to change the displayed name. */}
       <div
-        className="absolute z-10 font-press-start text-[24px] text-black"
+        className="absolute z-10 font-press-start text-[20px] text-black"
         style={{ left: NAME_X, top: NAME_Y, width: 120, textAlign: 'left', lineHeight: 1 }}
       >
-        {name}
+        {'Vishnu  Swaroop'}
       </div>
 
       {/* IMAGE: Insert the Non-Tech Secretary's image here. To add an image, pass the 'imageSrc' prop. */}

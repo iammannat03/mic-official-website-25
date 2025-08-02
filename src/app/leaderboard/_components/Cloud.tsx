@@ -1,7 +1,7 @@
 import React from 'react';
 import Image from 'next/image';
 import { CloudImageProps } from './types';
-import { useCloudFloat } from './hooks/useCloudFloat';
+import { useCloudFloat } from '../../../hooks/useCloudFloat';
 
 interface CloudComponentProps {
   cloud: CloudImageProps;

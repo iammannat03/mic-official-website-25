@@ -2,7 +2,7 @@ import React, { useMemo } from 'react';
 import { CloudImageProps } from './types';
 import { STATIC_CLOUDS } from './constants';
 import { CloudComponent } from './Cloud';
-import { useViewportSize } from './hooks/useViewportSize';
+import { useViewportSize } from '@/hooks/useViewportSize';
 
 export function Clouds() {
   const viewportSize = useViewportSize();

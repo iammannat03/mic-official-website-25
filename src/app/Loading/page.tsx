@@ -138,22 +138,22 @@ const ContentBox = ({ inputText, setInputText }: { inputText: string; setInputTe
         marginRight: 'auto',
       }}
     >
-      <input
-        type="text"
-        value={inputText}
-        onChange={e => setInputText(e.target.value)}
+      <p
         style={{
-          background: 'transparent',
-          border: 'none',
           color: '#fff',
           fontFamily: "'Press Start 2P', monospace",
-          fontSize: 'inherit',
-          outline: 'none',
-          width: '90%',
+          fontSize: 'clamp(12px, 1.2vw, 18px)',
           textAlign: 'center',
-          marginBottom: 24,
+          margin: '0 0 24px',
+          padding: '0 8px',
+          wordBreak: 'break-word',
+          lineHeight: 1.6,
         }}
-      />
+      >
+        {inputText}
+      </p>
+
+
       <div style={{ display: 'flex', justifyContent: 'center', gap: 6 }}>
         {Array.from({ length: 6 }).map((_, idx) => (
           <div
@@ -184,7 +184,7 @@ const Clouds = ({ clouds }: { clouds: { top: number; left: number }[] }) => (
 
 const LoadingPage: React.FC = () => {
   const [isDarkMode, setIsDarkMode] = useState(false);
-  const [inputText, setInputText] = useState('Lorem ipsum dolor sit amet');
+  const [inputText, setInputText] = useState('Welcome to the realm where tech meets adventure. Your journey begins now — build, break, and boss through the world of innovation.');
 
   useEffect(() => {
     const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');

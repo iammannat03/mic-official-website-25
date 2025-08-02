@@ -8,10 +8,10 @@ export { LeaderboardTable } from './LeaderboardTable';
 export { Podium } from './Podium';
 
 // Hooks
-export { useCloudFloat } from './hooks/useCloudFloat';
-export { useDarkMode } from './hooks/useDarkMode';
-export { useResponsiveScale } from './hooks/useResponsiveScale';
-export { useViewportSize } from './hooks/useViewportSize';
+export { useCloudFloat } from '@/hooks/useCloudFloat';
+export { useDarkMode } from '@/hooks/useDarkMode';
+export { useResponsiveScale } from '@/hooks/useResponsiveScale';
+export { useViewportSize } from '@/hooks/useViewportSize';
 
 // Types and Constants
 export * from './types';

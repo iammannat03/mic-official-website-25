@@ -6,9 +6,14 @@ import { LeaderboardTable } from './LeaderboardTable';
 
 interface ArcadeScreenProps {
   tab: string;
+  themeColors: {
+    textColor: string;
+    lineColor: string;
+    borderColor: string;
+  };
 }
 
-export function ArcadeScreen({ tab }: ArcadeScreenProps) {
+export function ArcadeScreen({ tab, themeColors }: ArcadeScreenProps) {
   return (
     <div
       style={{
@@ -18,7 +23,7 @@ export function ArcadeScreen({ tab }: ArcadeScreenProps) {
         width: SCREEN.width,
         height: SCREEN.height,
         zIndex: 2,
-        color: 'white',
+        color: themeColors.textColor === 'text-white' ? 'white' : '#1f2937',
         overflow: 'hidden',
         display: 'flex',
         flexDirection: 'column',
@@ -53,7 +58,7 @@ export function ArcadeScreen({ tab }: ArcadeScreenProps) {
             height: PODIUM.height,
           }}
         >
-          <Podium podium={mockPodium} />
+          <Podium podium={mockPodium} themeColors={themeColors} />
         </div>
       ) : (
         <div
@@ -69,7 +74,7 @@ export function ArcadeScreen({ tab }: ArcadeScreenProps) {
             msOverflowStyle: 'none',
           }}
         >
-          <LeaderboardTable rows={mockTable} tab={tab} />
+          <LeaderboardTable rows={mockTable} tab={tab} themeColors={themeColors} />
         </div>
       )}
     </div>

@@ -12,7 +12,7 @@ interface PresidentCardProps {
  * Uses president.svg as the card background, overlays the name, leaves a blank image area,
  * and places stars.svg at the bottom, all at exact pixel dimensions.
  */
-const PresidentCard: React.FC<PresidentCardProps> = ({ name, imageSrc }) => {
+const PresidentCard: React.FC<PresidentCardProps> = ({ name , imageSrc }) => {
   // SVG dimensions from president.svg
   const CARD_WIDTH = 327;
   const CARD_HEIGHT = 279;
@@ -43,10 +43,10 @@ const PresidentCard: React.FC<PresidentCardProps> = ({ name, imageSrc }) => {
 
       {/* NAME: Insert the President's name here. Update the 'name' prop to change the displayed name. */}
       <div
-        className="absolute z-10 font-press-start text-[24px] text-black"
+        className="absolute z-10 font-press-start text-[20px] text-black"
         style={{ left: NAME_X, top: NAME_Y, width: 120, textAlign: 'left', lineHeight: 1 }}
       >
-        {name}
+        {'Eshaan'}
       </div>
 
       {/* IMAGE: Insert the President's image here. To add an image, pass the 'imageSrc' prop. */}
