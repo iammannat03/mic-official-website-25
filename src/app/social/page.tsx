@@ -48,7 +48,7 @@ const pipes = [
   },
   {
     pipeLeft: 1080,
-    pipeTop: 320,      // moved down
+    pipeTop: 300,      // moved down
     pipeHeight: 80,    // shortened
     upright: false,
   },
@@ -68,7 +68,7 @@ const icons = [
     width: 95,
     height: 60,
     left: 213,
-    top: 220,
+    top: 230,
     aria: "Send Email",
   },
   {
@@ -78,7 +78,7 @@ const icons = [
     width: 80,
     height: 60,
     left: 1100,
-    top: 410,
+    top: 385,
     aria: "Instagram",
   },
   {
@@ -88,7 +88,7 @@ const icons = [
     width: 80,
     height: 60,
     left: 780,
-    top: 270,
+    top: 275,
     aria: "LinkedIn",
   },
 ];
@@ -100,7 +100,7 @@ const bird = {
   width: 100,
   height: 45,
   left: 510,
-  top: 275,
+  top: 265,
 };
 
 function getBranchCount(isUpright: boolean, pipeTop: number, pipeHeight: number) {
@@ -140,8 +140,8 @@ export default function SocialPage() {
   // Fade transition handler
   const handleToggle = () => {
     setFade(true);
+    setDarkMode((d) => !d);
     setTimeout(() => {
-      setDarkMode((d) => !d);
       setFade(false);
     }, 400);
   };
