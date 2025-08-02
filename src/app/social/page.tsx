@@ -19,7 +19,7 @@ const pipes = [
 
 const socialIcons = [
   {
-    href: "mailto:your@email.com",
+    href: "https://mail.google.com/mail/u/0/#inbox?compose=CllgCKHRLsSBsQdMlSszGrlrxQxSjHMzgMBpLTXMjRKBQHhRTQQtMhZxDcbgbTbXNpPNhzVcTcL ",
     src: "/images/mail.png",
     alt: "Email",
     width: 60,
@@ -28,7 +28,7 @@ const socialIcons = [
     aria: "Send Email",
   },
   {
-    href: "https://instagram.com/",
+    href: "https://www.instagram.com/microsoft.innovations.vitc/?hl=en",
     src: "/images/instagram.png",
     alt: "Instagram",
     width: 60,
@@ -37,7 +37,7 @@ const socialIcons = [
     aria: "Instagram",
   },
   {
-    href: "https://linkedin.com/",
+    href: "https://www.linkedin.com/company/microsoft-innovations-club-vitc/?originalSubdomain=in ",
     src: "/images/linkedin.png",
     alt: "LinkedIn",
     width: 60,
