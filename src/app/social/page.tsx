@@ -1,7 +1,9 @@
+"use client";
+import React, { useState } from "react";
 import Image from "next/image";
 
+// Clouds repositioned to the leftmost side and all zIndex set to 0 (behind)
 const clouds = [
-  // Clouds repositioned to the leftmost side and all zIndex set to 0 (behind)
   { src: "/images/cloud1.png", alt: "Cloud", width: 310, height: 150, style: { top: 270, left: 0, zIndex: 0 } },
   { src: "/images/cloud2.png", alt: "Cloud", width: 250, height: 120, style: { top: 180, left: 700, zIndex: 0 } },
   { src: "/images/cloud3.png", alt: "Cloud", width: 320, height: 160, style: { top: 350, left: 400, zIndex: 0 } },
@@ -127,14 +129,35 @@ function getBranchLength(isUpright: boolean, pipeTop: number, pipeHeight: number
 }
 
 export default function SocialPage() {
+  const [darkMode, setDarkMode] = useState(true);
+  const [fade, setFade] = useState(false);
+
+  // Colors for light/dark mode
+  const background = darkMode
+    ? "linear-gradient(to bottom, #0a2540 60%, #1e3c72 100%)"
+    : "linear-gradient(to bottom, #eaf1fb 60%, #b5d0f7 100%)";
+
+  // Fade transition handler
+  const handleToggle = () => {
+    setFade(true);
+    setTimeout(() => {
+      setDarkMode((d) => !d);
+      setFade(false);
+    }, 400);
+  };
+
   return (
     <div
       style={{
         position: "relative",
         width: "100vw",
         height: "100vh",
-        background: "linear-gradient(to bottom, #0a2540 60%, #1e3c72 100%)",
+        background,
         overflow: "hidden",
+        transition: "background 0.4s",
+        filter: fade ? "brightness(0.7)" : "none",
+        transitionProperty: "background, filter",
+        transitionDuration: "0.4s",
       }}
     >
       {/* Grid background */}
@@ -147,6 +170,7 @@ export default function SocialPage() {
             "linear-gradient(rgba(255,255,255,0.05) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.05) 1px, transparent 1px)",
           backgroundSize: "40px 40px",
           zIndex: 0,
+          pointerEvents: "none",
         }}
       />
 
@@ -164,6 +188,8 @@ export default function SocialPage() {
             pointerEvents: "none",
             zIndex: cloud.style.zIndex ?? 1,
             filter: "drop-shadow(0 2px 8px rgba(0,0,0,0.10))",
+            opacity: fade ? 0.7 : 1,
+            transition: "opacity 0.4s",
           }}
           priority
         />
@@ -193,8 +219,6 @@ export default function SocialPage() {
       {/* Pipes */}
       {pipes.map((pipe, i) => {
         const isUpright = pipe.upright;
-        // For upright: branch starts at pipeTop + pipeHeight (bottom of pipe)
-        // For overturned: branch from top to pipeTop (top of pipe)
         const branchCount = getBranchCount(isUpright, pipe.pipeTop, pipe.pipeHeight);
         const branchLength = getBranchLength(isUpright, pipe.pipeTop, pipe.pipeHeight);
 
@@ -205,8 +229,6 @@ export default function SocialPage() {
               position: "absolute",
               left: pipe.pipeLeft,
               top: isUpright ? pipe.pipeTop : 0,
-              // For overturned, position the pipe at the bottom of the pipe (so head is at pipeTop)
-              // and flip the column so the head is at the bottom and branches go up
               bottom: !isUpright ? `calc(100vh - ${pipe.pipeTop + PIPE_HEAD_HEIGHT}px)` : undefined,
               width: PIPE_WIDTH,
               zIndex: 1,
@@ -214,6 +236,8 @@ export default function SocialPage() {
               flexDirection: isUpright ? "column" : "column-reverse",
               alignItems: "center",
               pointerEvents: "none",
+              opacity: fade ? 0.7 : 1,
+              transition: "opacity 0.4s",
             }}
           >
             {/* Pipe head */}
@@ -287,25 +311,71 @@ export default function SocialPage() {
             left: icon.left,
             top: icon.top,
             zIndex: 2,
+            opacity: fade ? 0.7 : 1,
+            transition: "opacity 0.4s",
           }}
         >
           <Image src={icon.src} alt={icon.alt} width={icon.width} height={icon.height} />
         </a>
       ))}
 
-      {/* Flappy Bird - also independent */}
-      <Image
-        src={bird.src}
-        alt={bird.alt}
-        width={bird.width}
-        height={bird.height}
+      {/* Flappy Bird with toggle switch */}
+      <div
         style={{
           position: "absolute",
           left: bird.left,
           top: bird.top,
-          zIndex: 2,
+          zIndex: 3,
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
         }}
-      />
+      >
+        <Image
+          src={bird.src}
+          alt={bird.alt}
+          width={bird.width}
+          height={bird.height}
+          style={{
+            cursor: "pointer",
+            filter: fade ? "brightness(0.7)" : "none",
+            transition: "filter 0.4s",
+          }}
+          onClick={handleToggle}
+          title="Toggle light/dark mode"
+        />
+        {/* Toggle switch visual below the bird */}
+        <button
+          onClick={handleToggle}
+          aria-label="Toggle light/dark mode"
+          style={{
+            marginTop: 8,
+            width: 48,
+            height: 24,
+            borderRadius: 12,
+            border: "2px solid #888",
+            background: darkMode ? "#222" : "#fff",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: darkMode ? "flex-end" : "flex-start",
+            padding: 2,
+            cursor: "pointer",
+            transition: "background 0.4s, border 0.4s",
+            boxShadow: "0 2px 8px rgba(0,0,0,0.10)",
+          }}
+        >
+          <span
+            style={{
+              display: "block",
+              width: 20,
+              height: 20,
+              borderRadius: "50%",
+              background: darkMode ? "#ffd700" : "#222",
+              transition: "background 0.4s",
+            }}
+          />
+        </button>
+      </div>
 
       {/* Menu Button */}
       <button
