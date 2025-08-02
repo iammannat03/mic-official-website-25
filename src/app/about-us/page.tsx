@@ -179,9 +179,10 @@ const MysteryCard = ({
   </div>
 );
 
+
 interface CloudFloatOptions {
-  baseTop: string | number;
-  baseLeft: string | number;
+  baseTop: number;  // changed to number for calculation
+  baseLeft: number; 
   amplitude?: number;
   speed?: number;
   phase?: number;
@@ -190,21 +191,41 @@ interface CloudFloatOptions {
 function useCloudFloat({ baseTop, baseLeft, amplitude = 30, speed = 1, phase = 0 }: CloudFloatOptions) {
   const [top, setTop] = useState(baseTop);
   const frame = useRef(0);
+
   useEffect(() => {
     let running = true;
+
     function animate() {
       frame.current += 1;
       const t = frame.current / 60;
-      setTop(Number(baseTop) + Math.sin(t * speed + phase) * amplitude);
+
+      // Modify top calculation so cloud never goes below  window height - footer height - cloud height offset 
+      // Let's assume footer height ~172px and cloud height offset conservatively 130px
+      // So maxTop = window.innerHeight - 172 - 130 = window.innerHeight - 302 approx.
+      // We'll min-limit top to maxTop: if computed top > maxTop, clamp it
+
+      const maxTop = window.innerHeight - 302;
+
+      let newTop = baseTop + Math.sin(t * speed + phase) * amplitude;
+      if (newTop > maxTop) {
+        newTop = maxTop;
+      }
+
+      setTop(newTop);
+
       if (running) requestAnimationFrame(animate);
     }
+
     animate();
+
     return () => {
       running = false;
     };
   }, [baseTop, amplitude, speed, phase]);
+
   return { top, left: baseLeft };
 }
+
 
 const AboutUsPage: React.FC = () => {
   const [isDarkMode, setIsDarkMode] = useState(false);
@@ -224,14 +245,18 @@ const AboutUsPage: React.FC = () => {
     document.body.style.overflowX = 'hidden';
     document.documentElement.style.minHeight = '100vh';
     document.documentElement.style.overflowX = 'hidden';
+
     const preventZoom = (e: WheelEvent) => {
       if (e.ctrlKey) e.preventDefault();
     };
+
     const preventKeyboardZoom = (e: KeyboardEvent) => {
       if (e.ctrlKey && ['+', '-', '0'].includes(e.key)) e.preventDefault();
     };
+
     document.addEventListener('wheel', preventZoom, { passive: false });
     document.addEventListener('keydown', preventKeyboardZoom);
+
     return () => {
       document.removeEventListener('wheel', preventZoom);
       document.removeEventListener('keydown', preventKeyboardZoom);
@@ -240,25 +265,27 @@ const AboutUsPage: React.FC = () => {
 
   const themeColors = isDarkMode
     ? {
-        background: 'linear-gradient(to bottom, #00040d 0%, #002855 100%)',
-        gridOpacity: 'rgba(255, 255, 255, 0.1)',
-      }
+      background: 'linear-gradient(to bottom, #00040d 0%, #002855 100%)',
+      gridOpacity: 'rgba(255, 255, 255, 0.1)',
+    }
     : {
-        background: 'linear-gradient(to bottom, #e0f2fe 0%, #87ceeb 100%)',
-        gridOpacity: 'rgba(255, 255, 255, 0.3)',
-      };
+      background: 'linear-gradient(to bottom, #e0f2fe 0%, #87ceeb 100%)',
+      gridOpacity: 'rgba(255, 255, 255, 0.3)',
+    };
 
+
+  // Adjusted clouds positions by making sure clouds Y start higher (reduce some baseTop to leave space)
   const cloudPositions = [
-    useCloudFloat({ baseTop: 154, baseLeft: -12, amplitude: 25, speed: 0.8, phase: 0 }),
-    useCloudFloat({ baseTop: 466, baseLeft: 22, amplitude: 35, speed: 1.1, phase: 1 }),
-    useCloudFloat({ baseTop: 700, baseLeft: 232, amplitude: 30, speed: 0.9, phase: 2 }),
-    useCloudFloat({ baseTop: 790, baseLeft: 1003, amplitude: 28, speed: 1.2, phase: 3 }),
-    useCloudFloat({ baseTop: 604.98, baseLeft: 1331, amplitude: 32, speed: 1.0, phase: 4 }),
-    useCloudFloat({ baseTop: 127.98, baseLeft: 1142, amplitude: 27, speed: 1.3, phase: 5 }),
-    useCloudFloat({ baseTop: -23, baseLeft: 1500, amplitude: 22, speed: 1.05, phase: 6 }),
-    useCloudFloat({ baseTop: 604.98, baseLeft: 1400, amplitude: 32, speed: 1.0, phase: 4 }),
-    useCloudFloat({ baseTop: 127.98, baseLeft: 1600, amplitude: 27, speed: 1.3, phase: 5 }),
-    useCloudFloat({ baseTop: 600, baseLeft: 1600, amplitude: 22, speed: 1.05, phase: 6 }),
+    useCloudFloat({ baseTop: 130, baseLeft: -12, amplitude: 25, speed: 0.8, phase: 0 }),
+    useCloudFloat({ baseTop: 440, baseLeft: 22, amplitude: 35, speed: 1.1, phase: 1 }),
+    useCloudFloat({ baseTop: 655, baseLeft: 232, amplitude: 30, speed: 0.9, phase: 2 }),
+    useCloudFloat({ baseTop: 730, baseLeft: 1003, amplitude: 28, speed: 1.2, phase: 3 }),
+    useCloudFloat({ baseTop: 560, baseLeft: 1331, amplitude: 32, speed: 1.0, phase: 4 }),
+    useCloudFloat({ baseTop: 100, baseLeft: 1142, amplitude: 27, speed: 1.3, phase: 5 }),
+    useCloudFloat({ baseTop: -10, baseLeft: 1500, amplitude: 22, speed: 1.05, phase: 6 }),
+    useCloudFloat({ baseTop: 560, baseLeft: 1400, amplitude: 32, speed: 1.0, phase: 4 }),
+    useCloudFloat({ baseTop: 100, baseLeft: 1600, amplitude: 27, speed: 1.3, phase: 5 }),
+    useCloudFloat({ baseTop: 560, baseLeft: 1600, amplitude: 22, speed: 1.05, phase: 6 }),
   ];
 
   const cloudImages = [
@@ -293,7 +320,7 @@ const AboutUsPage: React.FC = () => {
           touchAction: 'none',
           overflowX: 'hidden',
           minHeight: '100vh',
-          paddingBottom: '40px',
+          paddingBottom: '190px',  // <-- increased paddingBottom to avoid overlap with footer
         }}
       >
         <Link href="/" passHref>
@@ -328,6 +355,25 @@ const AboutUsPage: React.FC = () => {
           <MysteryCard frameColor="#f7a8a8" innerColor="#ffe5ed" dotColor="#a13b48" title="Helloo There" desc=" system development." style={{ marginTop: 0 }} />
           <MysteryCard frameColor="#7faee3" innerColor="#d1f1ff" dotColor="#294771" title="Hello World!" desc=" MIC events." style={{ marginTop: lift }} />
         </div>
+      </div>
+
+      {/* Mario Footer */}
+      <div className="mario-footer">
+        <Image
+          src="/images/Mario.png"
+          alt="Mario Footer"
+          width={1512}
+          height={172}
+          style={{
+            width: '100%',
+            height: 'auto',
+            display: 'block',
+            objectFit: 'cover',
+            pointerEvents: 'none',
+            userSelect: 'none',
+          }}
+          priority
+        />
       </div>
 
       <style jsx>{`
@@ -374,6 +420,16 @@ const AboutUsPage: React.FC = () => {
           .mystery-card {
             margin: 12px 0 !important;
           }
+        }
+        /* Mario Footer styles */
+        .mario-footer {
+          position: fixed;
+          left: 0;
+          bottom: 0;
+          width: 100vw;
+          z-index: 100;
+          pointer-events: none;
+          user-select: none;
         }
       `}</style>
     </>
