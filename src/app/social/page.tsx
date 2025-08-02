@@ -1,24 +1,20 @@
-"use client";
-import React, { useState } from "react";
+"use client"; //client side only 
+import React, { useState, useEffect } from "react";
 import Image from "next/image";
 
-// Clouds repositioned to the leftmost side and all zIndex set to 0 (behind)
 const clouds = [
   { src: "/images/cloud1.png", alt: "Cloud", width: 310, height: 150, style: { top: 270, left: 0, zIndex: 0 } },
   { src: "/images/cloud2.png", alt: "Cloud", width: 250, height: 120, style: { top: 180, left: 700, zIndex: 0 } },
   { src: "/images/cloud3.png", alt: "Cloud", width: 320, height: 160, style: { top: 350, left: 400, zIndex: 0 } },
   { src: "/images/cloud1.png", alt: "Cloud", width: 220, height: 110, style: { top: 500, left: 950, zIndex: 0 } },
   { src: "/images/cloud2.png", alt: "Cloud", width: 200, height: 100, style: { top: 600, left: 200, zIndex: 0 } },
-  // Additional clouds for more coverage and spacing, all behind
   { src: "/images/cloud1.png", alt: "Cloud", width: 260, height: 130, style: { top: 80, left: 500, zIndex: 0 } },
   { src: "/images/cloud2.png", alt: "Cloud", width: 260, height: 130, style: { top: 480, left: 50, zIndex: 0 } },
   { src: "/images/cloud2.png", alt: "Cloud", width: 210, height: 105, style: { top: 250, left: 1000, zIndex: 0 } },
   { src: "/images/cloud3.png", alt: "Cloud", width: 280, height: 140, style: { top: 420, left: 700, zIndex: 0 } },
-  { src: "/images/cloud1.png", alt: "Cloud", width: 240, height: 120, style: { top: 50, left: 120, zIndex: 0 } }, // moved to left
-  { src: "/images/cloud2.png", alt: "Cloud", width: 230, height: 115, style: { top: 520, left: 510, zIndex: 0 } }, // moved to left
+  { src: "/images/cloud1.png", alt: "Cloud", width: 240, height: 120, style: { top: 50, left: 120, zIndex: 0 } },
+  { src: "/images/cloud2.png", alt: "Cloud", width: 230, height: 115, style: { top: 520, left: 510, zIndex: 0 } },
   { src: "/images/cloud3.png", alt: "Cloud", width: 250, height: 125, style: { top: 80, left: 900, zIndex: 0 } },
-
-  // --- Clouds to the right side, all behind ---
   { src: "/images/cloud1.png", alt: "Cloud", width: 300, height: 150, style: { top: 100, left: 1100, zIndex: 0 } },
   { src: "/images/cloud2.png", alt: "Cloud", width: 250, height: 120, style: { top: 250, left: 1300, zIndex: 0 } },
   { src: "/images/cloud3.png", alt: "Cloud", width: 320, height: 160, style: { top: 400, left: 1100, zIndex: 0 } },
@@ -26,30 +22,29 @@ const clouds = [
   { src: "/images/cloud2.png", alt: "Cloud", width: 200, height: 100, style: { top: 650, left: 1200, zIndex: 0 } },
 ];
 
-// Pipes: position and size are now independent from icons
 const pipes = [
   {
     pipeLeft: 200,
-    pipeTop: 320,      // moved down
-    pipeHeight: 80,    // shortened
+    pipeTop: 320,
+    pipeHeight: 80,
     upright: true,
   },
   {
     pipeLeft: 500,
-    pipeTop: 180,      // moved down
-    pipeHeight: 80,    // shortened
+    pipeTop: 180,
+    pipeHeight: 80,
     upright: false,
   },
   {
     pipeLeft: 760,
-    pipeTop: 380,      // moved down
-    pipeHeight: 80,    // shortened
+    pipeTop: 380,
+    pipeHeight: 80,
     upright: true,
   },
   {
     pipeLeft: 1080,
-    pipeTop: 300,      // moved down
-    pipeHeight: 80,    // shortened
+    pipeTop: 300,
+    pipeHeight: 80,
     upright: false,
   },
 ];
@@ -59,7 +54,6 @@ const PIPE_WIDTH = 120;
 const PIPE_HEAD_WIDTH = 160;
 const PIPE_HEAD_HEIGHT = 60;
 
-// Icons: position is now fully independent
 const icons = [
   {
     href: "https://mail.google.com/mail/u/0/#inbox?compose=CllgCKHRLsSBsQdMlSszGrlrxQxSjHMzgMBpLTXMjRKBQHhRTQQtMhZxDcbgbTbXNpPNhzVcTcL",
@@ -93,7 +87,6 @@ const icons = [
   },
 ];
 
-// Bird icon, also independently positioned
 const bird = {
   src: "/images/bird.png",
   alt: "Flappy Bird",
@@ -103,41 +96,29 @@ const bird = {
   top: 265,
 };
 
-function getBranchCount(isUpright: boolean, pipeTop: number, pipeHeight: number) {
-  // Use 100vh as a fallback for SSR
-  const pageHeight =
-    typeof window !== "undefined"
-      ? window.innerHeight
-      : 1000;
-  return Math.ceil(
-    (isUpright
-      ? pageHeight - (pipeTop + pipeHeight)
-      : pipeTop) / PIPE_BRANCH_HEIGHT
-  );
-}
-
-function getBranchLength(isUpright: boolean, pipeTop: number, pipeHeight: number) {
-  const pageHeight =
-    typeof window !== "undefined"
-      ? window.innerHeight
-      : 1000;
-  // Upright: branch from bottom of pipe to bottom of page
-  // Overturned: branch from top of page to top of pipe
-  return isUpright
-    ? pageHeight - (pipeTop + pipeHeight)
-    : pipeTop;
-}
+const STAR_COUNT = 60;
+const STAR_POSITIONS = Array.from({ length: STAR_COUNT }).map((_, i) => ({
+  top: Math.floor((i * 123) % 700) + Math.floor(i * 17) % 40,
+  left: Math.floor((i * 337) % 1500) + Math.floor(i * 31) % 40,
+  size: Math.random() * 2 + 1,
+}));
 
 export default function SocialPage() {
   const [darkMode, setDarkMode] = useState(true);
   const [fade, setFade] = useState(false);
+  const [pageHeight, setPageHeight] = useState<number | null>(null);
 
-  // Colors for light/dark mode
+  useEffect(() => {
+    setPageHeight(window.innerHeight);
+    const handleResize = () => setPageHeight(window.innerHeight);
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
   const background = darkMode
     ? "linear-gradient(to bottom, #0a2540 60%, #1e3c72 100%)"
     : "linear-gradient(to bottom, #eaf1fb 60%, #b5d0f7 100%)";
 
-  // Fade transition handler
   const handleToggle = () => {
     setFade(true);
     setDarkMode((d) => !d);
@@ -145,6 +126,24 @@ export default function SocialPage() {
       setFade(false);
     }, 400);
   };
+
+  function getBranchCount(isUpright: boolean, pipeTop: number, pipeHeight: number) {
+    if (pageHeight === null) return 0;
+    return Math.ceil(
+      (isUpright
+        ? pageHeight - (pipeTop + pipeHeight)
+        : pipeTop) / PIPE_BRANCH_HEIGHT
+    );
+  }
+
+  function getBranchLength(isUpright: boolean, pipeTop: number, pipeHeight: number) {
+    if (pageHeight === null) return 0;
+    return isUpright
+      ? pageHeight - (pipeTop + pipeHeight)
+      : pipeTop;
+  }
+
+  if (pageHeight === null) return null;
 
   return (
     <div
@@ -160,7 +159,26 @@ export default function SocialPage() {
         transitionDuration: "0.4s",
       }}
     >
-      {/* Grid background */}
+      {/* star dots */}
+      {STAR_POSITIONS.map((star, i) => (
+        <div
+          key={i}
+          style={{
+            position: "absolute",
+            top: star.top,
+            left: star.left,
+            width: star.size,
+            height: star.size,
+            borderRadius: "50%",
+            background: "white",
+            opacity: 0.85,
+            zIndex: 0,
+            pointerEvents: "none",
+          }}
+        />
+      ))}
+
+      {/* grid background */}
       <div
         style={{
           position: "absolute",
@@ -174,7 +192,7 @@ export default function SocialPage() {
         }}
       />
 
-      {/* Clouds */}
+      {/* clouds */}
       {clouds.map((cloud, i) => (
         <Image
           key={i}
@@ -195,7 +213,7 @@ export default function SocialPage() {
         />
       ))}
 
-      {/* Logo as a button to home */}
+      {/* logo as a button to home */}
       <a
         href="/main"
         aria-label="Go to home"
@@ -216,7 +234,7 @@ export default function SocialPage() {
         />
       </a>
 
-      {/* Pipes */}
+      {/* pipes */}
       {pipes.map((pipe, i) => {
         const isUpright = pipe.upright;
         const branchCount = getBranchCount(isUpright, pipe.pipeTop, pipe.pipeHeight);
@@ -240,7 +258,7 @@ export default function SocialPage() {
               transition: "opacity 0.4s",
             }}
           >
-            {/* Pipe head */}
+            {/* pipe head */}
             <div
               style={{
                 width: PIPE_HEAD_WIDTH,
@@ -266,7 +284,7 @@ export default function SocialPage() {
                 }}
               />
             </div>
-            {/* Pipe branches */}
+            {/* pipe branches */}
             <div
               style={{
                 width: PIPE_WIDTH,
@@ -298,7 +316,7 @@ export default function SocialPage() {
         );
       })}
 
-      {/* Social Icons - now fully independent */}
+      {/* social icons */}
       {icons.map((icon, i) => (
         <a
           key={i}
@@ -319,7 +337,7 @@ export default function SocialPage() {
         </a>
       ))}
 
-      {/* Flappy Bird with toggle switch */}
+      {/* flappy bird with toggle switch */}
       <div
         style={{
           position: "absolute",
@@ -344,47 +362,16 @@ export default function SocialPage() {
           onClick={handleToggle}
           title="Toggle light/dark mode"
         />
-        {/* Toggle switch visual below the bird */}
-        <button
-          onClick={handleToggle}
-          aria-label="Toggle light/dark mode"
-          style={{
-            marginTop: 8,
-            width: 48,
-            height: 24,
-            borderRadius: 12,
-            border: "2px solid #888",
-            background: darkMode ? "#222" : "#fff",
-            display: "flex",
-            alignItems: "center",
-            justifyContent: darkMode ? "flex-end" : "flex-start",
-            padding: 2,
-            cursor: "pointer",
-            transition: "background 0.4s, border 0.4s",
-            boxShadow: "0 2px 8px rgba(0,0,0,0.10)",
-          }}
-        >
-          <span
-            style={{
-              display: "block",
-              width: 20,
-              height: 20,
-              borderRadius: "50%",
-              background: darkMode ? "#ffd700" : "#222",
-              transition: "background 0.4s",
-            }}
-          />
-        </button>
       </div>
 
-      {/* Menu Button */}
+      {/* pacman style menu button,can be hooked to an actual nav later */}
       <button
         aria-label="Open menu"
         style={{
-          position: "absolute",
+          position: "fixed",
           bottom: 30,
           right: 30,
-          zIndex: 2,
+          zIndex: 10,
           background: "none",
           border: "none",
           padding: 0,
@@ -392,8 +379,8 @@ export default function SocialPage() {
         }}
         tabIndex={0}
       >
-        <Image src="/PacMan.gif" alt="Menu" width={40} height={40} />
-      </button>
+        <Image src="/PacMan.gif" alt="Menu" width={40} height={50} />           
+      </button>                         
     </div>
   );
 }
