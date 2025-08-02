@@ -25,11 +25,11 @@ export default function SocialPage() {
       />
 
       {/* Clouds */}
-      <Image src="/images/cloud1.png" alt="cloud" width={70} height={40} style={{ position: "absolute", top: 60, left: 200 }} />
-      <Image src="/images/cloud2.png" alt="cloud" width={50} height={30} style={{ position: "absolute", top: 120, left: 600 }} />
-      <Image src="/images/cloud3.png" alt="cloud" width={60} height={35} style={{ position: "absolute", top: 300, left: 400 }} />
-      <Image src="/images/cloud1.png" alt="cloud" width={40} height={25} style={{ position: "absolute", top: 400, left: 800 }} />
-      <Image src="/images/cloud2.png" alt="cloud" width={50} height={30} style={{ position: "absolute", top: 200, left: 1000 }} />
+      <Image src="/images/cloud1.png" alt="cloud" width={200} height={100} style={{ position: "absolute", top: 60, left: 200 }} />
+      <Image src="/images/cloud2.png" alt="cloud" width={150} height={90} style={{ position: "absolute", top: 120, left: 600 }} />
+      <Image src="/images/cloud3.png" alt="cloud" width={210} height={100} style={{ position: "absolute", top: 300, left: 400 }} />
+      <Image src="/images/cloud1.png" alt="cloud" width={300} height={200} style={{ position: "absolute", top: 400, left: 800 }} />
+      <Image src="/images/cloud2.png" alt="cloud" width={200} height={100} style={{ position: "absolute", top: 200, left: 1000 }} />
 
       {/* Logo */}
       <Image src="/images/logo.png" alt="logo" width={70} height={70} style={{ position: "absolute", top: 20, left: 20, zIndex: 2 }} />
