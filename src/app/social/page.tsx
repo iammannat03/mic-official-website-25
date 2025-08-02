@@ -10,22 +10,20 @@ const clouds = [
   { src: "/images/cloud2.png", alt: "Cloud", width: 60, height: 30, style: { top: 600, left: 900 } },
 ];
 
-const pipes = [
-  { left: 160 },
-  { left: 420 },
-  { left: 650 },
-  { left: 900 },
-];
-
+// Social icons and their pipe positions
 const socialIcons = [
   {
-    href: "https://mail.google.com/mail/u/0/#inbox?compose=CllgCKHRLsSBsQdMlSszGrlrxQxSjHMzgMBpLTXMjRKBQHhRTQQtMhZxDcbgbTbXNpPNhzVcTcL ",
+    href: "mailto:your@email.com",
     src: "/images/mail.png",
     alt: "Email",
     width: 60,
     height: 45,
-    style: { top: 180, left: 100, zIndex: 2 },
     aria: "Send Email",
+    pipeLeft: 160,
+    pipeHeight: 320,
+    iconTop: 180,
+    iconLeft: 100,
+    upright: true,
   },
   {
     href: "https://www.instagram.com/microsoft.innovations.vitc/?hl=en",
@@ -33,19 +31,46 @@ const socialIcons = [
     alt: "Instagram",
     width: 60,
     height: 60,
-    style: { top: 120, left: 470, zIndex: 2 },
     aria: "Instagram",
+    pipeLeft: 470,
+    pipeHeight: 250,
+    iconTop: 120,
+    iconLeft: 470,
+    upright: false,
   },
   {
-    href: "https://www.linkedin.com/company/microsoft-innovations-club-vitc/?originalSubdomain=in ",
+    href: "https://www.linkedin.com/company/microsoft-innovations-club-vitc/?originalSubdomain=in",
     src: "/images/linkedin.png",
     alt: "LinkedIn",
     width: 60,
     height: 60,
-    style: { top: 80, left: 720, zIndex: 2 },
     aria: "LinkedIn",
+    pipeLeft: 720,
+    pipeHeight: 180,
+    iconTop: 80,
+    iconLeft: 720,
+    upright: true,
+  },
+  {
+    href: "#",
+    src: "/images/menu.png",
+    alt: "Menu",
+    width: 60,
+    height: 60,
+    aria: "Menu",
+    pipeLeft: 1000,
+    pipeHeight: 300,
+    iconTop: 200,
+    iconLeft: 1000,
+    upright: false,
   },
 ];
+
+// Set the actual height of your pipebranch image here:
+const PIPE_BRANCH_HEIGHT = 80; // px, adjust to your actual image height
+const PIPE_WIDTH = 120; // px, adjust to your actual image width
+const PIPE_HEAD_WIDTH = 160; // px, should be wider than branch for protrusion
+const PIPE_HEAD_HEIGHT = 40; // px
 
 export default function SocialPage() {
   return (
@@ -94,17 +119,55 @@ export default function SocialPage() {
         priority
       />
 
-      {/* Pipes */}
-      {pipes.map((pipe, i) => (
-        <Image
-          key={i}
-          src="/images/pipe.png"
-          alt="Pipe"
-          width={120}
-          height={400}
-          style={{ position: "absolute", top: 0, left: pipe.left }}
-        />
-      ))}
+      {/* Pipes below icons */}
+      {socialIcons.map((icon, i) => {
+        const branchCount = Math.ceil(icon.pipeHeight / PIPE_BRANCH_HEIGHT);
+        const isUpright = icon.upright;
+        return (
+          <div
+            key={i}
+            style={{
+              position: "absolute",
+              left: icon.pipeLeft,
+              top: isUpright ? 0 : undefined,
+              bottom: !isUpright ? 0 : undefined,
+              width: PIPE_WIDTH,
+              height: icon.pipeHeight + PIPE_HEAD_HEIGHT,
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "center",
+              zIndex: 1,
+              transform: isUpright ? "none" : "scaleY(-1)",
+            }}
+          >
+            {/* Pipe branches */}
+            {Array.from({ length: branchCount }).map((_, idx) => (
+              <Image
+                key={idx}
+                src="/images/pipebranch.png"
+                alt="Pipe body"
+                width={PIPE_WIDTH}
+                height={PIPE_BRANCH_HEIGHT}
+                style={{ width: "100%", height: PIPE_BRANCH_HEIGHT }}
+              />
+            ))}
+            {/* Pipe head (protruding) */}
+            <Image
+              src="/images/pipehead.png"
+              alt="Pipe head"
+              width={PIPE_HEAD_WIDTH}
+              height={PIPE_HEAD_HEIGHT}
+              style={{
+                width: PIPE_HEAD_WIDTH,
+                height: PIPE_HEAD_HEIGHT,
+                marginLeft: -(PIPE_HEAD_WIDTH - PIPE_WIDTH) / 2,
+                marginRight: -(PIPE_HEAD_WIDTH - PIPE_WIDTH) / 2,
+                zIndex: 2,
+              }}
+            />
+          </div>
+        );
+      })}
 
       {/* Social Icons */}
       {socialIcons.map((icon, i) => (
@@ -114,7 +177,12 @@ export default function SocialPage() {
           target="_blank"
           rel="noopener noreferrer"
           aria-label={icon.aria}
-          style={{ position: "absolute", ...icon.style }}
+          style={{
+            position: "absolute",
+            top: icon.iconTop,
+            left: icon.iconLeft,
+            zIndex: 2,
+          }}
         >
           <Image src={icon.src} alt={icon.alt} width={icon.width} height={icon.height} />
         </a>
