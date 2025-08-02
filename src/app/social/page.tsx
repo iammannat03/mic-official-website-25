@@ -40,7 +40,7 @@ export default function SocialPage() {
       <Image src="/images/pipe.png" alt="pipe" width={120} height={400} style={{ position: "absolute", top: 0, left: 650 }} />
       <Image src="/images/pipe.png" alt="pipe" width={120} height={400} style={{ position: "absolute", top: 0, left: 900 }} />
 
-      {/* Social Icons */}
+      {/* Social Icons*/}
       <a href="mailto:your@email.com" target="_blank" rel="noopener noreferrer">
         <Image src="/images/mail.png" alt="mail" width={60} height={45} style={{ position: "absolute", top: 180, left: 100, zIndex: 2 }} />
       </a>
