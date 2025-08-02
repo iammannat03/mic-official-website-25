@@ -122,11 +122,15 @@ const NotFoundPage: React.FC = () => {
         <div style={{ position: 'absolute', top: 24, left: 24, zIndex: 10 }}>
           <Image src={logoUrl} alt="MIC Logo" width={64} height={64} />
         </div>
+        {/* Dot on right edge above clouds */}
+        <div style={{ position: 'absolute', top: 80, right: 40, zIndex: 10 }}>
+          <Image src="/images/dot.png" alt="Star" width={8} height={8} />
+        </div>
         {/* Cloud above YOU DIED! 404 (animated) */}
         <Image src="/images/cloud3.png" alt="Cloud Above 404" width={204} height={125} style={{ position: 'absolute', ...useCloudFloat({ baseTop: 80, baseLeft: 500, amplitude: 18, speed: 1.1, phase: 7 }), zIndex: 11 }} />
         {/* Main PNG text */}
-        <div style={{ position: 'absolute', left: '50%', top: 220, transform: 'translateX(-50%)', zIndex: 10 }}>
-          <Image src={textPngUrl} alt="YOU DIED! 404" width={900} height={232} />
+        <div style={{ position: 'absolute', left: '50%', top: '45%', transform: 'translate(-50%, -50%)', zIndex: 10 }}>
+          <Image src={textPngUrl} alt="YOU DIED! 404" width={1000} height={258} />
         </div>
         {/* Button */}
         <button
@@ -134,7 +138,7 @@ const NotFoundPage: React.FC = () => {
           style={{
             position: 'absolute',
             left: '50%',
-            top: 220 + 232 + 16, // image top + image height + reduced margin
+            top: 'calc(45% + 129px)', // 45% (new center) + half image height (129px) + margin (8px)
             transform: 'translateX(-50%)',
             zIndex: 10,
             width: 340,
