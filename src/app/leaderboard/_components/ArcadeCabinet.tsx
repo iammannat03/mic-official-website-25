@@ -6,9 +6,14 @@ import { ArcadeControls } from './ArcadeControls';
 
 interface ArcadeCabinetProps {
   scale: number;
+  themeColors: {
+    textColor: string;
+    lineColor: string;
+    borderColor: string;
+  };
 }
 
-export function ArcadeCabinet({ scale }: ArcadeCabinetProps) {
+export function ArcadeCabinet({ scale, themeColors }: ArcadeCabinetProps) {
   const [tab, setTab] = useState('all');
 
   return (
@@ -48,7 +53,24 @@ export function ArcadeCabinet({ scale }: ArcadeCabinetProps) {
           priority
         />
         
-        <ArcadeScreen tab={tab} />
+        {/* Logo in top left */}
+        <Image
+          src="/Logo.svg"
+          alt="MIC Logo"
+          width={80}
+          height={80}
+          style={{
+            position: 'absolute',
+            top: 30,
+            left: 250,
+            zIndex: 3,
+            pointerEvents: 'none',
+            userSelect: 'none',
+          }}
+          priority
+        />
+        
+        <ArcadeScreen tab={tab} themeColors={themeColors} />
         <ArcadeControls tab={tab} onTabChange={setTab} />
       </div>
     </div>

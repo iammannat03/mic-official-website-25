@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
-import { CloudProps } from '../types';
+import { CloudProps } from '../app/leaderboard/_components/types';
 
 // Animated cloud movement with viewport bounds
 export function useCloudFloat({

@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { ARCADE_WIDTH, ARCADE_HEIGHT } from '../constants';
+import { ARCADE_WIDTH, ARCADE_HEIGHT } from '../app/leaderboard/_components/constants';
 
 export function useResponsiveScale() {
   const [scale, setScale] = useState(1);

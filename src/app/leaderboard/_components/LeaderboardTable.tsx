@@ -5,9 +5,14 @@ import { SANS_FONT, MONO_FONT } from './constants';
 interface LeaderboardTableProps {
   rows: TableRow[];
   tab: string;
+  themeColors?: {
+    textColor: string;
+    lineColor: string;
+    borderColor: string;
+  };
 }
 
-export function LeaderboardTable({ rows, tab }: LeaderboardTableProps) {
+export function LeaderboardTable({ rows, tab, themeColors }: LeaderboardTableProps) {
   return (
     <div
       style={{
@@ -30,7 +35,7 @@ export function LeaderboardTable({ rows, tab }: LeaderboardTableProps) {
             display: 'flex',
             alignItems: 'center',
             width: '100%',
-            background: '#fff9d6',
+            background: themeColors?.textColor === 'text-white' ? '#fff9d6' : '#ffffff',
             padding: '16px 18px',
             fontSize: 14, // Reduced from 20 for Press Start 2P
             fontWeight: 700,
@@ -44,7 +49,7 @@ export function LeaderboardTable({ rows, tab }: LeaderboardTableProps) {
             style={{
               fontSize: 18, // Reduced from 28 for Press Start 2P
               fontWeight: 900,
-              color: '#222',
+              color: themeColors?.textColor === 'text-white' ? '#222' : '#1f2937',
               width: 40,
               textAlign: 'center',
               fontFamily: MONO_FONT,
@@ -58,7 +63,7 @@ export function LeaderboardTable({ rows, tab }: LeaderboardTableProps) {
               <span
                 style={{
                   fontWeight: 900,
-                  color: '#222',
+                  color: themeColors?.textColor === 'text-white' ? '#222' : '#1f2937',
                   fontSize: 14, // Reduced from 20 for Press Start 2P
                   fontFamily: SANS_FONT,
                   whiteSpace: 'nowrap',
@@ -74,7 +79,7 @@ export function LeaderboardTable({ rows, tab }: LeaderboardTableProps) {
                   padding: '2px 8px',
                   borderRadius: 6,
                   background: tab === 'ffcs' ? '#f9c' : '#bada9f',
-                  color: '#222',
+                  color: themeColors?.textColor === 'text-white' ? '#222' : '#1f2937',
                   fontWeight: 700,
                   fontFamily: MONO_FONT,
                   flexShrink: 0,
@@ -109,7 +114,7 @@ export function LeaderboardTable({ rows, tab }: LeaderboardTableProps) {
               style={{
                 fontWeight: 900,
                 fontSize: 16, // Reduced from 24 for Press Start 2P
-                color: '#222',
+                color: themeColors?.textColor === 'text-white' ? '#222' : '#1f2937',
                 fontFamily: MONO_FONT,
                 lineHeight: 1,
               }}

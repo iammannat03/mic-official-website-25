@@ -17,7 +17,7 @@ export default function LeaderboardArcade() {
 
   return (
     <div
-      className="min-h-screen w-full h-screen flex items-center justify-center relative overflow-hidden"
+      className="min-h-screen w-full h-screen flex items-end justify-center relative overflow-hidden"
       style={{
         fontFamily: SANS_FONT,
         backgroundImage: `
@@ -33,7 +33,7 @@ export default function LeaderboardArcade() {
       }}
     >
       <Clouds />
-      <ArcadeCabinet scale={scale} />
+      <ArcadeCabinet scale={scale} themeColors={themeColors} />
     </div>
   );
 }
