@@ -9,25 +9,7 @@ import {
   OrbitControls,
 } from "@react-three/drei";
 
-
-  return (
-    <Canvas
-      style={{
-        width: "100%",
-        height: "80vh",
-      }}
-      camera={{ position: [0, 0, 8], fov: 50 }}
-    >
-      <OrbitControls />
-      <Suspense fallback={null}>
-        <RotatingModel />
-        <Environment preset="sunset" />
-      </Suspense>
-    </Canvas>
-  );
-};
-
-
+const RotatingModel: React.FC = () => {
   const ref = useRef<THREE.Group>(null);
 
   const speed = useRef({
@@ -52,8 +34,25 @@ import {
         (Math.PI / 4) * 1.1,
       ]}
       ref={ref}
-
     />
+  );
+};
+
+const ModelScene: React.FC = () => {
+  return (
+    <Canvas
+      style={{
+        width: "100%",
+        height: "80vh",
+      }}
+      camera={{ position: [0, 0, 8], fov: 50 }}
+    >
+      <OrbitControls />
+      <Suspense fallback={null}>
+        <RotatingModel />
+        <Environment preset="sunset" />
+      </Suspense>
+    </Canvas>
   );
 };
 

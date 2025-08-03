@@ -63,21 +63,29 @@ const cloudConfig: CloudFloatOptions[] = [
 // Memoized Cloud component
 const Cloud = memo(({ config }: { config: CloudFloatOptions }) => {
   const { top, left } = useCloudFloat(config);
+  const [imageError, setImageError] = useState(false);
+  
   return (
     <Image
-      src={config.src}
+      src={imageError ? '/images/fallback-cloud.png' : config.src}
       alt={config.alt}
       width={config.width}
       height={config.height}
       className="absolute z-10 transition-transform duration-100"
-      style={{ top: `${top}px`, left: `${left}px`, transform: 'translateZ(0)' }}
-      loading="lazy"
-      onError={(e) => {
-        e.currentTarget.src = '/images/fallback-cloud.png';
+      style={{ 
+        top: `${top}px`, 
+        left: `${left}px`, 
+        transform: 'translateZ(0)',
+        willChange: 'transform'
       }}
+      loading="lazy"
+      onError={() => setImageError(true)}
+      priority={false}
     />
   );
 });
+
+Cloud.displayName = 'Cloud';
 
 
 // Main component

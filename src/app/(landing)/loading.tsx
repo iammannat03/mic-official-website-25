@@ -2,7 +2,6 @@
 
 import React, { useState, useEffect, useRef } from 'react';
 import Image from 'next/image';
-import Link from 'next/link';
 
 interface CloudFloatOptions {
   baseTop: number;
@@ -74,7 +73,7 @@ const ClubLogo = () => (
   </div>
 );
 
-const ContentBox = ({ inputText, setInputText,loadingProgress  }: { inputText: string; loadingProgress: number; setInputText: (val: string) => void }) => (
+const ContentBox = ({ inputText, loadingProgress }: { inputText: string; loadingProgress: number }) => (
   <div
     style={{
       position: 'absolute',
@@ -272,7 +271,7 @@ const LoadingPage: React.FC = () => {
     >
 
       <ClubLogo />
-      <ContentBox inputText={inputText} setInputText={setInputText} loadingProgress={loadingProgress} />
+      <ContentBox inputText={inputText} loadingProgress={loadingProgress} />
       <Clouds clouds={cloudPositions} />
     </div>
   );

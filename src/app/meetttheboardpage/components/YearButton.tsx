@@ -17,8 +17,8 @@ const YearButton: React.FC = () => {
 
   // Optional: click outside to close
   useEffect(() => {
-    const handleClickOutside = (event: any) => {
-      if (ref.current && !ref.current.contains(event.target)) {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (ref.current && !ref.current.contains(event.target as Node)) {
         setIsOpen(false);
       }
     };

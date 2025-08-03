@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
 import Cartridge from "./Cartridge";
 import Console from "./Console";
@@ -9,9 +9,11 @@ import LoadingPage from "./loading";
 export default function Landing() {
   const [inserted, setInserted] = useState(false);
   const [poweredOn, setPoweredOn] = useState(false);
-  const [showSplash, setShowSplash] = useState(false); // NEW
+  const [showSplash, setShowSplash] = useState(false);
 
   const router = useRouter();
+  const splashTimeoutRef = useRef<NodeJS.Timeout>();
+  const navigationTimeoutRef = useRef<NodeJS.Timeout>();
 
   const handleInsert = () => {
     setInserted(true);
@@ -21,13 +23,21 @@ export default function Landing() {
     if (inserted && !poweredOn) {
       setPoweredOn(true);
 
-      // After 1 second of booting up, show splash
-      setTimeout(() => {
+      // Clear any existing timeouts
+      if (splashTimeoutRef.current) {
+        clearTimeout(splashTimeoutRef.current);
+      }
+      if (navigationTimeoutRef.current) {
+        clearTimeout(navigationTimeoutRef.current);
+      }
+
+      // After 0.5 seconds of booting up, show splash
+      splashTimeoutRef.current = setTimeout(() => {
         setShowSplash(true);
       }, 500);
 
-      // After another 2 seconds, go to /main
-      setTimeout(() => {
+      // After another 4.5 seconds (total 5 seconds), navigate to /main
+      navigationTimeoutRef.current = setTimeout(() => {
         router.push("/main");
       }, 5000);
     }
@@ -35,11 +45,31 @@ export default function Landing() {
 
   const handleReset = () => {
     if (inserted) {
+      // Clear any pending timeouts
+      if (splashTimeoutRef.current) {
+        clearTimeout(splashTimeoutRef.current);
+      }
+      if (navigationTimeoutRef.current) {
+        clearTimeout(navigationTimeoutRef.current);
+      }
+
       setInserted(false);
       setPoweredOn(false);
-      setShowSplash(false); // reset splash too
+      setShowSplash(false);
     }
   };
+
+  // Cleanup timeouts on unmount
+  useEffect(() => {
+    return () => {
+      if (splashTimeoutRef.current) {
+        clearTimeout(splashTimeoutRef.current);
+      }
+      if (navigationTimeoutRef.current) {
+        clearTimeout(navigationTimeoutRef.current);
+      }
+    };
+  }, []);
 
   return (
     <div className="min-h-screen bg-black flex items-center justify-center font-mono relative overflow-hidden">
@@ -57,25 +87,29 @@ export default function Landing() {
 
       {/* Centered container with fixed aspect ratio */}
       <div className="relative w-full max-w-[400px] aspect-[3/2] z-10">
-        <Console
-          onPower={handlePower}
-          onReset={handleReset}
-          showButtons={inserted}
-        />
+        {/* Console component without props - it likely handles its own rendering */}
+        <Console />
         <Cartridge inserted={inserted} onClick={handleInsert} />
 
-        {/* Power and Reset buttons */}
+        {/* Power and Reset buttons - positioned over the console */}
         {inserted && (
           <>
-            <div
+            <button
               onClick={handlePower}
-              className="absolute top-[27%] left-[66%] w-[10%] h-[10%] cursor-pointer z-50"
+              disabled={poweredOn}
+              className={`absolute top-[27%] left-[66%] w-[10%] h-[10%] cursor-pointer z-50 bg-transparent border-none ${
+                poweredOn ? 'opacity-50 cursor-not-allowed' : 'hover:opacity-80'
+              }`}
               title="Power"
+              type="button"
+              aria-label="Power button"
             />
-            <div
+            <button
               onClick={handleReset}
-              className="absolute top-[37%] left-[66%] w-[10%] h-[10%] cursor-pointer z-50"
+              className="absolute top-[37%] left-[66%] w-[10%] h-[10%] cursor-pointer z-50 bg-transparent border-none hover:opacity-80"
               title="Reset"
+              type="button"
+              aria-label="Reset button"
             />
           </>
         )}
@@ -83,19 +117,19 @@ export default function Landing() {
 
       {/* Instruction text */}
       {!inserted && (
-        <p className="text-white text-sm absolute top-10 left-1/2 -translate-x-1/2 animate-pulse z-50">
+        <p className="text-white text-sm absolute top-10 left-1/2 -translate-x-1/2 animate-pulse z-50 pointer-events-none select-none">
           Click to insert cartridge
         </p>
       )}
 
       {/* Status messages */}
       {inserted && !poweredOn && (
-        <p className="text-green-400 text-sm absolute bottom-24 left-1/2 -translate-x-1/2 animate-pulse z-50">
+        <p className="text-green-400 text-sm absolute bottom-24 left-1/2 -translate-x-1/2 animate-pulse z-50 pointer-events-none select-none">
           Press Power to start
         </p>
       )}
       {poweredOn && !showSplash && (
-        <p className="text-yellow-400 text-sm absolute bottom-24 left-1/2 -translate-x-1/2 z-50">
+        <p className="text-yellow-400 text-sm absolute bottom-24 left-1/2 -translate-x-1/2 z-50 pointer-events-none select-none">
           Booting up...
         </p>
       )}
@@ -103,8 +137,7 @@ export default function Landing() {
       {/* Splash screen overlay */}
       {showSplash && (
         <div className="absolute inset-0 bg-black flex flex-col items-center justify-center z-50">
-                  <LoadingPage/>
-
+          <LoadingPage />
         </div>
       )}
     </div>
