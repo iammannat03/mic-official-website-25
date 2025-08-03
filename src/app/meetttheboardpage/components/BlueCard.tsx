@@ -18,7 +18,7 @@ const RedCard: React.FC<RedCardProps> = ({ name, title, imageSrc }) => {
   const IMAGE_W = 112;
   const IMAGE_H = 118;
 
-  const NAME_X = 40;
+  const NAME_X = 24;
   const NAME_Y = 120;
 
   return (
@@ -39,7 +39,7 @@ const RedCard: React.FC<RedCardProps> = ({ name, title, imageSrc }) => {
 
       {/* Name */}
       <div
-        className="absolute z-10 font-press-start text-[24px] text-black"
+        className="absolute z-10 font-press-start text-[17px] text-black"
         style={{
           left: NAME_X,
           top: NAME_Y,
@@ -75,7 +75,12 @@ const RedCard: React.FC<RedCardProps> = ({ name, title, imageSrc }) => {
               alt="Vice-President Profile"
               width={IMAGE_W}
               height={IMAGE_H}
-              className="object-cover rounded-[12px]"
+              className="object-cover w-full h-full rounded-[12px]"
+              style={{
+                transform: 'scale(1.1)',          // Zoom in by 20%
+                transformOrigin: 'center center',
+                objectPosition: '+2px center', // Center the image
+              }}
             />
           )}
           {title && (
@@ -83,11 +88,11 @@ const RedCard: React.FC<RedCardProps> = ({ name, title, imageSrc }) => {
               className="absolute font-press-start text-[18px] text-black"
               style={{
                 top: -60,
-                
+
                 transform: 'translateX(-40%)',
                 textAlign: 'center',
                 lineHeight: 1,
-              
+
               }}
             >
               {title}
