@@ -21,7 +21,7 @@ export default function ConditionalNavbar() {
   const pathname = usePathname();
   
   // Don't render navbar on home page
-  if (pathname === '/') {
+  if (pathname === '/' || pathname === '/mobile') {
     return <Logo />;
   }
   

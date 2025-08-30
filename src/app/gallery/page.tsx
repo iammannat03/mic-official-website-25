@@ -1,42 +1,44 @@
 'use client';
 
-import React, { useState, useEffect, useRef, memo } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import Image from 'next/image';
 
-// Types
 interface CloudFloatOptions {
-  baseTop: number;
-  baseLeft: number;
+  baseTop: string | number;
+  baseLeft: string | number;
   amplitude?: number;
   speed?: number;
-  phase?: number;
-  width: number;
-  height: number;
-  src: string;
-  alt: string;
+  phase?: number; 
 }
 
-interface ThemeColors {
-  background: string;
-  lineColor: string;
-  borderColor: string;
-  textColor: string;
-  gridOpacity: string;
-}
+// Sample gallery data - replace with your actual images
+const galleryImages = [
+  { id: 1, src: '/images/gallery/event1.jpg', alt: 'Tech Event 2024' },
+  { id: 2, src: '/images/gallery/workshop1.jpg', alt: 'AI Workshop' },
+  { id: 3, src: '/images/gallery/hackathon1.jpg', alt: 'Hackathon Winners' },
+  { id: 4, src: '/images/gallery/team1.jpg', alt: 'Team Building' },
+  { id: 5, src: '/images/gallery/conference1.jpg', alt: 'Tech Conference'},
+  { id: 6, src: '/images/gallery/project1.jpg', alt: 'Project Showcase'},
+  { id: 7, src: '/images/gallery/workshop2.jpg', alt: 'Web Dev Workshop' },
+  { id: 8, src: '/images/gallery/event2.jpg', alt: 'Annual Meet' },
+  { id: 9, src: '/images/gallery/hackathon2.jpg', alt: 'Code Sprint' },
+  { id: 10, src: '/images/gallery/team2.jpg', alt: 'Department Heads' },
+  { id: 11, src: '/images/gallery/project2.jpg', alt: 'Innovation Fair' },
+  { id: 12, src: '/images/gallery/workshop3.jpg', alt: 'ML Workshop'},
+];
 
-// Custom hook for cloud animation
 function useCloudFloat({ baseTop, baseLeft, amplitude = 30, speed = 1, phase = 0 }: CloudFloatOptions) {
   const [top, setTop] = useState(baseTop);
   const frame = useRef(0);
 
   useEffect(() => {
     let running = true;
-    const animate = () => {
+    function animate() {
       frame.current += 1;
-      const t = frame.current / 60; // 60fps
-      setTop(baseTop + Math.sin(t * speed + phase) * amplitude);
+      const t = frame.current / 60;
+      setTop(Number(baseTop) + Math.sin(t * speed + phase) * amplitude);
       if (running) requestAnimationFrame(animate);
-    };
+    }
     animate();
     return () => {
       running = false;
@@ -46,54 +48,23 @@ function useCloudFloat({ baseTop, baseLeft, amplitude = 30, speed = 1, phase = 0
   return { top, left: baseLeft };
 }
 
-// Cloud configuration
-const cloudConfig: CloudFloatOptions[] = [
-  { baseTop: 150, baseLeft: -10, amplitude: 25, speed: 0.8, phase: 0, width: 355, height: 228, src: '/images/cloud1.png', alt: 'Cloud 1' },
-  { baseTop: 460, baseLeft: 20, amplitude: 35, speed: 1.1, phase: 1, width: 367, height: 219, src: '/images/cloud2.png', alt: 'Cloud 2' },
-  { baseTop: 700, baseLeft: 230, amplitude: 30, speed: 0.9, phase: 2, width: 355, height: 228, src: '/images/cloud1.png', alt: 'Cloud 3' },
-  { baseTop: 790, baseLeft: 1000, amplitude: 28, speed: 1.2, phase: 3, width: 204, height: 125, src: '/images/cloud3.png', alt: 'Cloud 4' },
-  { baseTop: 600, baseLeft: 1330, amplitude: 32, speed: 1.0, phase: 4, width: 204, height: 125, src: '/images/cloud3.png', alt: 'Cloud 5' },
-  { baseTop: 120, baseLeft: 1140, amplitude: 27, speed: 1.3, phase: 5, width: 388, height: 254, src: '/images/cloud2.png', alt: 'Cloud 6' },
-  { baseTop: -20, baseLeft: 1500, amplitude: 22, speed: 1.05, phase: 6, width: 355, height: 228, src: '/images/cloud1.png', alt: 'Cloud 7' },
-  { baseTop: 600, baseLeft: 1400, amplitude: 32, speed: 1.0, phase: 4, width: 204, height: 125, src: '/images/cloud3.png', alt: 'Cloud 8' },
-  { baseTop: 120, baseLeft: 1600, amplitude: 27, speed: 1.3, phase: 5, width: 388, height: 254, src: '/images/cloud2.png', alt: 'Cloud 9' },
-  { baseTop: 600, baseLeft: 1600, amplitude: 22, speed: 1.05, phase: 6, width: 355, height: 228, src: '/images/cloud1.png', alt: 'Cloud 10' },
-];
-
-// Memoized Cloud component
-const Cloud = memo(({ config }: { config: CloudFloatOptions }) => {
-  const { top, left } = useCloudFloat(config);
-  const [imageError, setImageError] = useState(false);
-  
-  return (
-    <Image
-      src={imageError ? '/images/fallback-cloud.png' : config.src}
-      alt={config.alt}
-      width={config.width}
-      height={config.height}
-      className="absolute z-10 transition-transform duration-100"
-      style={{ 
-        top: `${top}px`, 
-        left: `${left}px`, 
-        transform: 'translateZ(0)',
-        willChange: 'transform'
-      }}
-      loading="lazy"
-      onError={() => setImageError(true)}
-      priority={false}
-    />
-  );
-});
-
-Cloud.displayName = 'Cloud';
-
-
-// Main component
 const GalleryPage: React.FC = () => {
+  const [selectedImage, setSelectedImage] = useState<number | null>(null);
   const [isDarkMode, setIsDarkMode] = useState(false);
-  const [isLoading, setIsLoading] = useState(true);
+  const [currentPage, setCurrentPage] = useState<number>(1);
+  const imagesPerPage = 8;
 
-  // Theme detection
+    // Cloud positions
+    const cloudPositions = [
+      useCloudFloat({ baseTop: 100, baseLeft: -50, amplitude: 25, speed: 0.8, phase: 0 }),
+      useCloudFloat({ baseTop: 300, baseLeft: 1200, amplitude: 30, speed: 1.1, phase: 1 }),
+      useCloudFloat({ baseTop: 600, baseLeft: 100, amplitude: 35, speed: 0.9, phase: 2 }),
+      useCloudFloat({ baseTop: 800, baseLeft: 1000, amplitude: 28, speed: 1.2, phase: 3 }),
+      useCloudFloat({ baseTop: 1100, baseLeft: 200, amplitude: 32, speed: 1.0, phase: 4 }),
+      useCloudFloat({ baseTop: 1300, baseLeft: 900, amplitude: 27, speed: 1.3, phase: 5 }),
+      useCloudFloat({ baseTop: 1500, baseLeft: 50, amplitude: 30, speed: 0.85, phase: 6 }),
+    ];
+
   useEffect(() => {
     const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
     setIsDarkMode(mediaQuery.matches);
@@ -102,16 +73,16 @@ const GalleryPage: React.FC = () => {
     return () => mediaQuery.removeEventListener('change', handleChange);
   }, []);
 
-  // Prevent scroll and zoom
   useEffect(() => {
+    const style = document.createElement('style');
+    
+    document.head.appendChild(style);
+
     document.body.style.margin = '0';
     document.body.style.padding = '0';
-    document.body.style.height = '100vh';
     document.body.style.overflow = 'hidden';
-    document.documentElement.style.height = '100vh';
     document.documentElement.style.overflow = 'hidden';
 
-    const preventScroll = (e: Event) => e.preventDefault();
     const preventZoom = (e: WheelEvent) => {
       if (e.ctrlKey) e.preventDefault();
     };
@@ -123,80 +94,245 @@ const GalleryPage: React.FC = () => {
 
     document.addEventListener('wheel', preventZoom, { passive: false });
     document.addEventListener('keydown', preventKeyboardZoom);
-    document.addEventListener('touchmove', preventScroll, { passive: false });
-
-    // Simulate loading
-    const timer = setTimeout(() => setIsLoading(false), 500);
 
     return () => {
       document.removeEventListener('wheel', preventZoom);
       document.removeEventListener('keydown', preventKeyboardZoom);
-      document.removeEventListener('touchmove', preventScroll);
       document.body.style.overflow = '';
-      document.body.style.margin = '';
-      document.body.style.padding = '';
-      document.body.style.height = '';
-      document.documentElement.style.height = '';
       document.documentElement.style.overflow = '';
-      clearTimeout(timer);
+      if (document.head.contains(style)) {
+        document.head.removeChild(style);
+      }
     };
   }, []);
 
-  const getThemeColors = (): ThemeColors => ({
-    background: isDarkMode
-      ? 'linear-gradient(to bottom, #00040d 0%, #002855 100%)'
-      : 'linear-gradient(to bottom, #e0f2fe 0%, #87ceeb 100%)',
-    lineColor: isDarkMode ? '#0B3A79' : '#1e88e5',
-    borderColor: isDarkMode ? '#1e40af' : '#3b82f6',
-    textColor: isDarkMode ? 'text-white' : 'text-gray-900',
-    gridOpacity: isDarkMode ? 'rgba(255, 255, 255, 0.1)' : 'rgba(255, 255, 255, 0.3)',
-  });
+  const getThemeColors = () => {
+    return isDarkMode
+      ? {
+        background: "linear-gradient(to bottom, #00040d 0%, #002855 100%)",
+        notebookBg: "#FCF3E3",
+        textColor: "text-white",
+        gridOpacity: "rgba(255, 255, 255, 0.1)"
+      }
+      : {
+        background: "linear-gradient(to bottom, #e0f2fe 0%, #87ceeb 100%)",
+        notebookBg: "#FCF3E3",
+        textColor: "text-gray-900",
+        gridOpacity: "rgba(255, 255, 255, 0.3)"
+      };
+  };
 
   const themeColors = getThemeColors();
 
+  // Calculate pagination
+  const totalPages = Math.ceil(galleryImages.length / imagesPerPage);
+  const startIndex = (currentPage - 1) * imagesPerPage;
+  const endIndex = startIndex + imagesPerPage;
+  const currentImages = galleryImages.slice(startIndex, endIndex);
+
+  const handlePageChange = (page: number) => {
+    setCurrentPage(page);
+  };
+
+  const handlePrevPage = () => {
+    if (currentPage > 1) setCurrentPage(currentPage - 1);
+  };
+
+  const handleNextPage = () => {
+    if (currentPage < totalPages) setCurrentPage(currentPage + 1);
+  };
+
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center p-4 sm:p-6 md:p-8 relative overflow-hidden"
+    <div className="h-screen w-full relative overflow-hidden"
       style={{
         backgroundImage: `
           linear-gradient(to right, ${themeColors.gridOpacity} 1px, transparent 1px),
           linear-gradient(to bottom, ${themeColors.gridOpacity} 1px, transparent 1px),
           ${themeColors.background}
         `,
-        backgroundSize: '30px 30px, 30px 30px, 100% 100%',
-        backgroundRepeat: 'repeat, repeat, no-repeat',
-        backgroundPosition: 'top left, top left, center',
-        userSelect: 'none',
-        touchAction: 'none',
-      }}
-    >
-      {isLoading ? (
-        <div className="animate-pulse text-center">
-          <div className={`h-8 w-48 ${themeColors.textColor} bg-opacity-20 bg-current rounded mb-4`} />
-          <div className={`h-6 w-64 ${themeColors.textColor} bg-opacity-20 bg-current rounded`} />
+        backgroundSize: "30px 30px, 30px 30px, 100% 100%",
+        backgroundRepeat: "repeat, repeat, no-repeat",
+        backgroundPosition: "top left, top left, center",
+        userSelect: "none",
+      }}>
+      
+      {/* Floating Clouds */}
+      {cloudPositions.map((pos, i) => (
+        <Image
+          key={i}
+          src={`/images/cloud${(i % 3) + 1}.png`}
+          alt={`Cloud ${i + 1}`}
+          width={300}
+          height={180}
+          className="pointer-events-none"
+          style={{ position: 'absolute', ...pos, zIndex: 1, opacity: 0.7 }}
+        />
+      ))}
+
+      {/* Main Content */}
+      <div className="relative z-10 flex items-center justify-center h-full p-4">
+        {/* Notebook/Gallery Container */}
+        <div 
+          className="relative w-full max-w-6xl h-[90vh] rounded-lg shadow-2xl overflow-hidden flex flex-col"
+          style={{
+            backgroundColor: themeColors.notebookBg,
+            backgroundImage: `
+              url("data:image/svg+xml,%3Csvg width='30' height='30' viewBox='0 0 30 30' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23d4b996' fill-opacity='0.1'%3E%3Cpath d='M0 0h30v30H0V0zm15 15h15v15H15V15z'/%3E%3C/g%3E%3C/svg%3E")
+            `,
+            border: "8px solid #8b4513",
+            borderRadius: "15px",
+          }}
+        >
+          {/* Spiral Binding */}
+          <div className="absolute left-0 top-0 bottom-0 w-12 bg-gradient-to-r from-amber-700 to-amber-600 flex flex-col items-center justify-start pt-8 space-y-6 z-10">
+            {[...Array(12)].map((_, i) => (
+              <div key={i} className="w-6 h-6 bg-amber-800 rounded-full shadow-inner border-2 border-amber-900"></div>
+            ))}
+          </div>
+
+          {/* Page Content */}
+          <div className="ml-12 p-6 flex-1 flex flex-col">
+            {/* Header */}
+            <div className="flex items-center mb-6">
+              <h1 className="font-press-start text-2xl md:text-4xl text-amber-900">
+                GALLERY
+              </h1>
+              <div className="ml-6 flex items-center space-x-2">
+                <div className="w-4 h-4 bg-red-500 rounded-full shadow-lg"></div>
+                <div className="w-4 h-4 bg-blue-500 rounded-full shadow-lg"></div>
+                <div className="w-4 h-4 bg-green-500 rounded-full shadow-lg"></div>
+              </div>
+            </div>
+
+            {/* Photo Gallery Grid - Fixed height container */}
+            <div className="flex-1 flex items-center justify-center mb-6 overflow-y-auto">
+              <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 p-4">
+                {currentImages.map((image, index) => (
+                  <div
+                    key={image.id}
+                    className="relative group cursor-pointer transform transition-all duration-300 hover:scale-105"
+                    onClick={() => setSelectedImage(image.id)}
+                  >
+                    {/* Polaroid Frame */}
+                    <div 
+                      className="bg-white p-2 pb-8 shadow-lg transition-transform duration-300"
+                      style={{
+                        transform: `rotate(${(index % 4 - 1.5) * 2}deg)`,
+                        width: '200px', // Increased size
+                        height: '250px' // Increased size
+                      }}
+                    >
+                      <div className="w-full h-48 bg-gray-200 overflow-hidden">
+                        <Image
+                          src={image.src}
+                          alt={image.alt}
+                          width={200} // Increased size
+                          height={160} // Increased size
+                          className="w-full h-full object-cover"
+                          onError={(e) => {
+                            const target = e.target as HTMLImageElement;
+                            target.src = 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAwIiBoZWlnaHQ9IjE2MCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSIjZGRkIi8+PHRleHQgeD0iNTAlIiB5PSI1MCUiIGZvbnQtc2l6ZT0iMTIiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGR5PSIuM2VtIiBmaWxsPSIjOTk5Ij5JbWFnZSBOb3QgRm91bmQ8L3RleHQ+PC9zdmc+';
+                          }}
+                        />
+                      </div>
+                      <div className="mt-2 text-center">
+                        <p className="font-press-start text-gray-700 text-sm leading-tight">{image.alt}</p>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* Pagination Controls */}
+            <div className="flex items-center justify-center space-x-4 mt-auto">
+              <button
+                onClick={handlePrevPage}
+                disabled={currentPage === 1}
+                className={`px-4 py-2 rounded-lg font-press-start text-xs transition-all duration-300 ${
+                  currentPage === 1
+                    ? 'bg-gray-300 text-gray-500 cursor-not-allowed'
+                    : 'bg-amber-600 text-white hover:bg-amber-700 transform hover:scale-105'
+                }`}
+              >
+                ← PREV
+              </button>
+
+              {/* Page Numbers */}
+              <div className="flex space-x-2">
+                {[...Array(totalPages)].map((_, index) => {
+                  const page = index + 1;
+                  return (
+                    <button
+                      key={page}
+                      onClick={() => handlePageChange(page)}
+                      className={`w-10 h-10 rounded-lg font-press-start text-xs transition-all duration-300 transform hover:scale-105 ${
+                        currentPage === page
+                          ? 'bg-amber-600 text-white shadow-lg'
+                          : 'bg-amber-200 text-amber-800 hover:bg-amber-300'
+                      }`}
+                    >
+                      {page}
+                    </button>
+                  );
+                })}
+              </div>
+
+              <button
+                onClick={handleNextPage}
+                disabled={currentPage === totalPages}
+                className={`px-4 py-2 rounded-lg font-press-start text-xs transition-all duration-300 ${
+                  currentPage === totalPages
+                    ? 'bg-gray-300 text-gray-500 cursor-not-allowed'
+                    : 'bg-amber-600 text-white hover:bg-amber-700 transform hover:scale-105'
+                }`}
+              >
+                NEXT →
+              </button>
+            </div>
+          </div>
+
+          {/* Corner Decorations */}
+          <div className="absolute top-4 right-4 w-8 h-8 bg-yellow-400 rounded-full shadow-lg"></div>
+          <div className="absolute bottom-4 right-4 w-6 h-6 bg-blue-400 rounded-full shadow-lg"></div>
+          <div className="absolute bottom-4 left-16 w-6 h-6 bg-green-400 rounded-full shadow-lg"></div>
         </div>
-      ) : (
-        <>
-          {cloudConfig.map((config, index) => (
-            <Cloud key={index} config={config} />
-          ))}
-          <h1
-            className={`font-press-start ${themeColors.textColor} z-20 text-center mb-4 tracking-tight transition-colors duration-300`}
-            style={{ fontSize: 'min(6vw, 3.5rem)' }}
-            role="heading"
-            aria-level={1}
-          >
-            Gallery
-          </h1>
-          <p
-            className={`font-press-start ${themeColors.textColor} text-lg sm:text-xl md:text-2xl z-20 transition-colors duration-300`}
-            aria-live="polite"
-          >
-            Under Construction
-          </p>
-        </>
+      </div>
+
+      {/* Modal for enlarged image */}
+      {selectedImage && (
+        <div 
+          className="fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center z-50 p-4"
+          onClick={() => setSelectedImage(null)}
+        >
+          <div className="relative max-w-4xl max-h-full bg-white p-4 rounded-lg">
+            <button
+              onClick={() => setSelectedImage(null)}
+              className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full w-8 h-8 flex items-center justify-center font-bold hover:bg-red-600 z-10"
+            >
+              ×
+            </button>
+            {(() => {
+              const image = galleryImages.find(img => img.id === selectedImage);
+              return image ? (
+                <Image
+                  src={image.src}
+                  alt={image.alt}
+                  width={800}
+                  height={600}
+                  className="max-w-full max-h-[80vh] object-contain rounded" // Adjusted max height for modal
+                  onError={(e) => {
+                    const target = e.target as HTMLImageElement;
+                    target.src = 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iODAwIiBoZWlnaHQ9IjYwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSIjZGRkIi8+PHRleHQgeD0iNTAlIiB5PSI1MCUiIGZvbnQtc2l6ZT0iMjQiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGR5PSIuM2VtIiBmaWxsPSIjOTk5Ij5JbWFnZSBOb3QgRm91bmQ8L3RleHQ+PC9zdmc+';
+                  }}
+                />
+              ) : null;
+            })()}
+          </div>
+        </div>
       )}
     </div>
   );
 };
 
-export default memo(GalleryPage);
+export default GalleryPage;

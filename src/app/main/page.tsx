@@ -1,9 +1,6 @@
 "use client";
 import React, { useEffect, useRef, useState } from "react";
-import ModelScene from "./_components/model-scene";
 import Image from "next/image";
-import Link from "next/link";
-
 
 
 const ClubLogo = () => (
@@ -59,6 +56,7 @@ interface CloudFloatOptions {
 function useCloudFloat({ baseTop, baseLeft, amplitude = 30, speed = 1, phase = 0 }: CloudFloatOptions) {
   const [top, setTop] = useState(baseTop);
   const [left, setLeft] = useState(baseLeft);
+  
   const frame = useRef(0);
 
   useEffect(() => {
@@ -114,6 +112,8 @@ const Clouds = ({ clouds }: { clouds: { top: number; left: number }[] }) => (
 
 
 const LandingPage = () => {
+    const [isDarkMode, setIsDarkMode] = useState(false);
+
   const cloudPositions = [
     { baseTop: 154, baseLeft: -12, amplitude: 25, speed: 0.8, phase: 0 },
     { baseTop: 466, baseLeft: 22, amplitude: 35, speed: 1.1, phase: 1 },
@@ -134,8 +134,42 @@ const LandingPage = () => {
     };
   }, []);
 
+   const getThemeColors = () => {
+    return isDarkMode
+      ? {
+        background: "linear-gradient(to bottom, #00040d 0%, #002855 100%)",
+        textColor: "text-white",
+        gridOpacity: "rgba(255, 255, 255, 0.1)"
+      }
+      : {
+        background: "linear-gradient(to bottom, #e0f2fe 0%, #87ceeb 100%)",
+        textColor: "text-gray-900",
+        gridOpacity: "rgba(255, 255, 255, 0.3)"
+      };
+  };
+  const themeColors = getThemeColors();
+  useEffect(() => {
+        const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
+        setIsDarkMode(mediaQuery.matches);
+        const handleChange = (e: MediaQueryListEvent) => setIsDarkMode(e.matches);
+        mediaQuery.addEventListener('change', handleChange);
+        return () => mediaQuery.removeEventListener('change', handleChange);
+      }, []);
+
   return (
+    <div className="w-full min-h-screen flex flex-col  relative overflow-hidden" style={{
+              backgroundImage: `
+                linear-gradient(to right, ${themeColors.gridOpacity} 1px, transparent 1px),
+                linear-gradient(to bottom, ${themeColors.gridOpacity} 1px, transparent 1px),
+                ${themeColors.background}
+              `,
+              backgroundSize: "30px 30px, 30px 30px, 100% 100%",
+              backgroundRepeat: "repeat, repeat, no-repeat",
+              backgroundPosition: "top left, top left, center",
+              userSelect: "none",
+            }}>
     <div className="w-full min-h-screen flex flex-col mt-5 relative overflow-hidden">
+      
       <a
         href="https://instagram.com/microsoftinnovationsclub"
         target="_blank"
@@ -199,6 +233,7 @@ const LandingPage = () => {
       <Clouds clouds={cloudPositions} />
       <ClubLogo />
       <Cube />
+    </div>
     </div>
   );
 };

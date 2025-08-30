@@ -2,21 +2,49 @@
 
 import React, { useState, useEffect, useRef } from 'react';
 import Image from 'next/image';
-import { useRouter } from 'next/navigation'; // ✅ for navigation
-import TeamMemberCard from './components/TeamMemberCard';
 import PresidentCard from './components/PresidentCard';
 import VicePresidentCard from './components/VicePresidentCard';
 import ManagementSecCard from './components/ManagementSecCard';
 import TechSecCard from './components/TechSecCard';
 import NonTechSecCard from './components/NonTechSecCard';
+import RedCard from './components/RedCard';
+import BlueCard from './components/BlueCard';
+import GreenCard from './components/GreenCard';
+import YellowCard from './components/YellowCard';
 
 interface CloudFloatOptions {
   baseTop: string | number;
   baseLeft: string | number;
   amplitude?: number;
   speed?: number;
-  phase?: number;
+  phase?: number; 
 }
+
+const leadsData = [
+  { name: 'Sanjay Dinesh', title: 'AIML', imageSrc: '/images/mic_departments/aiml_sanjay.jpg' },
+  { name: 'Abhinav Kumar V', title: 'AIML', imageSrc: '/images/mic_departments/aiml_abhinav.jpg' },
+  { name: 'Aman', title: 'CP', imageSrc: '/images/mic_departments/cp_aman.jpg' },
+  { name: 'Anmol Singh', title: 'CP', imageSrc: '/images/mic_departments/cp_anmol.jpg' },
+  { name: 'Aagney', title: 'Content', imageSrc: '/images/mic_departments/content_aagney.jpg' },
+  { name: 'Shambhavi', title: 'Content', imageSrc: '/images/mic_departments/content_shambhavi.jpg' },
+  { name: 'Pranjal Mitra', title: 'Cyber Security', imageSrc: '/images/mic_departments/cs_pranjal.jpg' },
+  { name: 'Mohammed Tahir', title: 'Cyber Security', imageSrc: '/images/mic_departments/cs_mohammed.jpg' },
+  { name: 'Gladwin Daniel', title: 'Design', imageSrc: '/images/mic_departments/design_Gladwin.jpg' },
+  { name: 'Jahnavi Nair', title: 'Design', imageSrc: '/images/mic_departments/' },
+  { name: 'Rakshana V', title: 'Development', imageSrc: '/images/mic_departments/dev_rakshana.jpg' },
+  { name: 'Mithil Girish', title: 'Development', imageSrc: '/images/mic_departments/dev_mithil.jpg' },
+  { name: 'Samyak Srijan', title: 'Entrepreneurship', imageSrc: '/images/mic_departments/entre_samyak.jpg' },
+  { name: 'Abishek B S', title: 'Entrepreneurship', imageSrc: '/images/mic_departments/entre_abhishek.jpg' },
+  { name: 'Jefrey Jose D', title: 'Management', imageSrc: '/images/mic_departments/man_jefrey.jpg' },
+  { name: 'Namita Sathish', title: 'Management', imageSrc: '/images/mic_departments/man_namitha.jpg' },
+  { name: 'Bhargavi Deshmukh', title: 'Management', imageSrc: '/images/mic_departments/man_bhargavi.jpg' },
+  { name: 'Anjum Sana', title: 'Social Media', imageSrc: '/images/mic_departments/so_sana.jpg' },
+  { name: 'Mithun Miras', title: 'Social Media', imageSrc: '/images/mic_departments/so_mithun.jpg' },
+  { name: 'Sravan Kowsik G', title: 'UI/UX', imageSrc: '/images/mic_departments/uiux_shravan.jpg' },
+  { name: 'Richika Rani', title: 'UI/UX', imageSrc: '/images/mic_departments/uiux_richika.jpg' },
+];
+
+const cardOrder = [RedCard, BlueCard, GreenCard, YellowCard];
 
 function useCloudFloat({ baseTop, baseLeft, amplitude = 30, speed = 1, phase = 0 }: CloudFloatOptions) {
   const [top, setTop] = useState(baseTop);
@@ -42,7 +70,6 @@ function useCloudFloat({ baseTop, baseLeft, amplitude = 30, speed = 1, phase = 0
 const MeetTheBoardPage: React.FC = () => {
   const [view, setView] = useState<'board' | 'departments'>('board');
   const [isDarkMode, setIsDarkMode] = useState(false);
-  const router = useRouter(); // ✅ for navigation
 
   // Define cloud positions using hooks at the top level
   const cloudPositions = [
@@ -67,14 +94,46 @@ const MeetTheBoardPage: React.FC = () => {
   }, []);
 
   useEffect(() => {
+    // Add transparent scrollbar styles
+    const style = document.createElement('style');
+    style.textContent = `
+      /* Transparent scrollbar for webkit browsers */
+      ::-webkit-scrollbar {
+        width: 8px;
+      }
+      ::-webkit-scrollbar-track {
+        background: transparent;
+      }
+      ::-webkit-scrollbar-thumb {
+        background: rgba(0, 0, 0, 0.2);
+        border-radius: 10px;
+      }
+      ::-webkit-scrollbar-thumb:hover {
+        background: rgba(0, 0, 0, 0.3);
+      }
+      
+      /* For Firefox */
+      * {
+        scrollbar-width: thin;
+        scrollbar-color: rgba(0, 0, 0, 0.2) transparent;
+      }
+    `;
+    document.head.appendChild(style);
+
     document.body.style.margin = '0';
     document.body.style.padding = '0';
-    document.body.style.height = '100vh';
-    document.body.style.overflow = 'hidden';
-    document.documentElement.style.height = '100vh';
-    document.documentElement.style.overflow = 'hidden';
+    document.body.style.overflowX = 'hidden';
+    document.documentElement.style.overflowX = 'hidden';
 
-    const preventScroll = (e: Event) => e.preventDefault();
+    // Set scroll behavior based on view
+    if (view === 'board') {
+      document.body.style.overflowY = 'hidden';
+      document.documentElement.style.overflowY = 'hidden';
+    } else {
+      document.body.style.overflowY = 'auto';
+      document.documentElement.style.overflowY = 'auto';
+    }
+
     const preventZoom = (e: WheelEvent) => {
       if (e.ctrlKey) e.preventDefault();
     };
@@ -86,15 +145,15 @@ const MeetTheBoardPage: React.FC = () => {
 
     document.addEventListener('wheel', preventZoom, { passive: false });
     document.addEventListener('keydown', preventKeyboardZoom);
-    document.addEventListener('touchmove', preventScroll, { passive: false });
 
     return () => {
       document.removeEventListener('wheel', preventZoom);
       document.removeEventListener('keydown', preventKeyboardZoom);
-      document.removeEventListener('touchmove', preventScroll);
       document.body.style.overflow = '';
+      document.documentElement.style.overflow = '';
+      document.head.removeChild(style);
     };
-  }, []);
+  }, [view]); // Add view as dependency to re-run when view changes
 
   const getThemeColors = () => {
     return isDarkMode
@@ -116,11 +175,18 @@ const MeetTheBoardPage: React.FC = () => {
 
   const themeColors = getThemeColors();
 
+  // Prepare rows for departments view
+  const rows = [];
+  const cardsPerRow = 4;
+  for (let i = 0; i < leadsData.length; i += cardsPerRow) {
+    rows.push(leadsData.slice(i, i + cardsPerRow));
+  }
+
   return (
     <div className="full-screen-container">
       <div className="content-wrapper">
         <div
-          className="min-h-screen flex flex-col items-center p-5 relative"
+          className={`${view === 'board' ? 'h-screen' : 'min-h-screen'} w-full flex flex-col items-center px-4 py-8 relative overflow-x-hidden`}
           style={{
             backgroundImage: `
               linear-gradient(to right, ${themeColors.gridOpacity} 1px, transparent 1px),
@@ -131,7 +197,6 @@ const MeetTheBoardPage: React.FC = () => {
             backgroundRepeat: "repeat, repeat, no-repeat",
             backgroundPosition: "top left, top left, center",
             userSelect: "none",
-            touchAction: "none",
           }}
         >
           {/* Clouds */}
@@ -155,33 +220,52 @@ const MeetTheBoardPage: React.FC = () => {
             ));
           })()}
 
+          {/* Stars / Dots - only show in departments view */}
+          {view === 'departments' && (
+            <div style={{ position: 'absolute', top: 0, left: 0, width: 1154, height: 364, zIndex: 2 }}>
+              <svg width="1154" height="364" viewBox="0 0 1154 364" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <ellipse cx="1150.02" cy="55" rx="3.98" ry="4" fill="white" />
+                <ellipse cx="949.88" cy="19" rx="3.98" ry="4" fill="white" />
+                <ellipse cx="203.12" cy="4" rx="3.98" ry="4" fill="white" />
+                <ellipse cx="134.42" cy="211" rx="3.98" ry="4" fill="white" />
+                <ellipse cx="3.98" cy="360" rx="3.98" ry="4" fill="white" />
+                <ellipse cx="486.89" cy="95" rx="3.98" ry="4" fill="white" />
+                <ellipse cx="677.07" cy="47" rx="3.98" ry="4" fill="white" />
+                <ellipse cx="1084.3" cy="299" rx="3.98" ry="4" fill="white" />
+              </svg>
+            </div>
+          )}
+
           {/* Heading */}
-          <h1 className={`${themeColors.textColor} font-press-start z-10 text-center mb-2`}
-            style={{ fontSize: "min(6vw, 4rem)" }}>
+          <h1 className={`${themeColors.textColor} font-press-start z-10 text-center mb-6`}
+            style={{ fontSize: "clamp(1.5rem, 6vw, 4rem)" }}>
             Meet the Team
           </h1>
 
           {/* Navigation Buttons */}
-          <div className="flex space-x-4 mb-8 relative z-10">
+          <div className="flex flex-col sm:flex-row gap-4 mb-8 relative z-10 w-full max-w-[720px] px-4">
             {/* Board Button */}
             <button
-              className={`relative w-[345px] h-[81px] flex items-center justify-center border-none bg-transparent p-0 focus:outline-none transition-all duration-1000`}
+              className={`relative w-full sm:w-[345px] h-[60px] sm:h-[81px] flex items-center justify-center border-none bg-transparent p-0 outline-none focus:outline-none focus-visible:outline-none transition-all duration-1000`}
               onClick={() => setView('board')}
               aria-pressed={view === 'board'}
+              style={{ outline: 'none' }}
             >
               <img src="/images/button-gold.svg" className={`absolute inset-0 w-full h-full ${view === 'board' ? 'opacity-100' : 'opacity-0'}`} alt="" />
               <img src="/images/button-peach.svg" className={`absolute inset-0 w-full h-full ${view === 'board' ? 'opacity-0' : 'opacity-100'}`} alt="" />
-              <span className="font-press-start text-[24px] text-black z-10">BOARD</span>
+              <span className="font-press-start text-[16px] sm:text-[24px] text-black z-10">BOARD</span>
             </button>
 
-            {/* Departments Button (with router.push) */}
+            {/* Departments Button */}
             <button
-              className={`relative w-[345px] h-[81px] flex items-center justify-center border-none bg-transparent p-0 focus:outline-none transition-all duration-1000`}
-              onClick={() => router.push('/meetttheboardpage')} // ✅ Navigates to a new page
+              className={`relative w-full sm:w-[345px] h-[60px] sm:h-[81px] flex items-center justify-center border-none bg-transparent p-0 outline-none focus:outline-none focus-visible:outline-none transition-all duration-1000`}
+              onClick={() => setView('departments')}
+              aria-pressed={view === 'departments'}
+              style={{ outline: 'none' }}
             >
               <img src="/images/button-gold.svg" className={`absolute inset-0 w-full h-full ${view === 'departments' ? 'opacity-100' : 'opacity-0'}`} alt="" />
               <img src="/images/button-peach.svg" className={`absolute inset-0 w-full h-full ${view === 'departments' ? 'opacity-0' : 'opacity-100'}`} alt="" />
-              <span className="font-press-start text-[24px] text-black z-10">DEPARTMENTS</span>
+              <span className="font-press-start text-[16px] sm:text-[24px] text-black z-10">DEPARTMENTS</span>
             </button>
           </div>
 
@@ -197,6 +281,27 @@ const MeetTheBoardPage: React.FC = () => {
                 <TechSecCard name="NAME" />
                 <NonTechSecCard name="NAME" />
               </div>
+            </div>
+          )}
+
+          {/* Departments View */}
+          {view === 'departments' && (
+            <div className="flex flex-col items-center space-y-8 relative z-10">
+              {rows.map((rowData, rowIndex) => (
+                <div key={rowIndex} className="flex justify-center space-x-8">
+                  {rowData.map((data, index) => {
+                    const CardComponent = cardOrder[index % cardOrder.length];
+                    return (
+                      <CardComponent
+                        key={index}
+                        name={data.name}
+                        title={data.title}
+                        imageSrc={data.imageSrc}
+                      />
+                    );
+                  })}
+                </div>
+              ))}
             </div>
           )}
         </div>
