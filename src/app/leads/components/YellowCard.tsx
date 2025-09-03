@@ -85,14 +85,14 @@ const RedCard: React.FC<RedCardProps> = ({ name, title, imageSrc }) => {
           )}
           {title && (
             <div
-              className="absolute font-press-start text-[16px] text-black"
+              className="absolute z-10 font-press-start text-[14px] text-black font-bold"
               style={{
-                top: -60,
-
-                transform: 'translateX(-40%)',
+                top: -64,
+                left: '-15%',
+                transform: 'translateX(-50%)',
                 textAlign: 'center',
                 lineHeight: 1,
-
+                whiteSpace: 'nowrap',
               }}
             >
               {title}

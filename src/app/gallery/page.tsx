@@ -13,18 +13,18 @@ interface CloudFloatOptions {
 
 // Sample gallery data - replace with your actual images
 const galleryImages = [
-  { id: 1, src: '/images/gallery/event1.jpg', alt: 'Tech Event 2024' },
-  { id: 2, src: '/images/gallery/workshop1.jpg', alt: 'AI Workshop' },
-  { id: 3, src: '/images/gallery/hackathon1.jpg', alt: 'Hackathon Winners' },
-  { id: 4, src: '/images/gallery/team1.jpg', alt: 'Team Building' },
-  { id: 5, src: '/images/gallery/conference1.jpg', alt: 'Tech Conference'},
-  { id: 6, src: '/images/gallery/project1.jpg', alt: 'Project Showcase'},
-  { id: 7, src: '/images/gallery/workshop2.jpg', alt: 'Web Dev Workshop' },
-  { id: 8, src: '/images/gallery/event2.jpg', alt: 'Annual Meet' },
-  { id: 9, src: '/images/gallery/hackathon2.jpg', alt: 'Code Sprint' },
-  { id: 10, src: '/images/gallery/team2.jpg', alt: 'Department Heads' },
-  { id: 11, src: '/images/gallery/project2.jpg', alt: 'Innovation Fair' },
-  { id: 12, src: '/images/gallery/workshop3.jpg', alt: 'ML Workshop'},
+  { id: 1, src: '/images/gallery/cysec.jpeg', alt: 'CyberSecurity Treasure Hunt' },
+  { id: 2, src: '/images/gallery/expo2024.jpeg', alt: 'Club Expo 2024' },
+  { id: 3, src: '/images/gallery/technical-writing.jpeg', alt: 'Technical Writing' },
+  { id: 4, src: '/images/gallery/story.jpeg', alt: 'My Story' },
+  { id: 5, src: '/images/gallery/clubcon1.jpeg', alt: 'Club Con' },
+  { id: 6, src: '/images/gallery/clubcon2.jpeg', alt: 'Club Con'},
+  { id: 7, src: '/images/gallery/clubcon3.jpeg', alt: 'Club Con' },
+  // { id: 8, src: '/images/gallery/event2.jpeg', alt: 'Annual Meet' },
+  // { id: 9, src: '/images/gallery/hackathon2.jpeg', alt: 'Code Sprint' },
+  // { id: 10, src: '/images/gallery/team2.jpeg', alt: 'Department Heads' },
+  // { id: 11, src: '/images/gallery/project2.jpeg', alt: 'Innovation Fair' },
+  // { id: 12, src: '/images/gallery/workshop3.jpeg', alt: 'ML Workshop'},
 ];
 
 function useCloudFloat({ baseTop, baseLeft, amplitude = 30, speed = 1, phase = 0 }: CloudFloatOptions) {

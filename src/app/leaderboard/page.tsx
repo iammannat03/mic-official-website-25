@@ -1,6 +1,6 @@
 'use client';
+import React, { useEffect } from 'react';
 
-import React from 'react';
 import { 
   ArcadeCabinet, 
   Clouds, 
@@ -14,6 +14,13 @@ export default function LeaderboardArcade() {
   const scale = useResponsiveScale();
   const isDarkMode = useDarkMode();
   const themeColors = getThemeColors(isDarkMode);
+
+  useEffect(() => {
+    document.body.style.overflow = "hidden";
+    return () => {
+      document.body.style.overflow = "";
+    };
+  }, []);
 
   return (
     <div
@@ -30,6 +37,7 @@ export default function LeaderboardArcade() {
         backgroundPosition: 'top left, top left, center',
         userSelect: 'none',
         touchAction: 'none',
+        overflow: 'hidden',
       }}
     >
       <Clouds />
