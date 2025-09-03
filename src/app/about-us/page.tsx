@@ -28,13 +28,21 @@ const MysteryCard = ({
     <div className="corner-dot top-right" style={{ background: dotColor }} />
     <div className="corner-dot bottom-left" style={{ background: dotColor }} />
     <div className="corner-dot bottom-right" style={{ background: dotColor }} />
+    
+    {/* Fixed title at the top */}
+    <div className="fixed-title" style={{ color: dotColor }}>
+      <h3>{title}</h3>
+    </div>
+    
+    {/* Scrollable content area */}
+    <div className="scrollable-content" style={{ color: dotColor }}>
+      <p>{desc}</p>
+    </div>
+    
     <div className="hover-question">
       <span style={{ color: dotColor }}>?</span>
     </div>
-    <div className="hover-details" style={{ color: dotColor }}>
-      <h3>{title}</h3>
-      <p>{desc}</p>
-    </div>
+    
     <style jsx>{`
       .mystery-card {
         width: 300px;
@@ -42,14 +50,13 @@ const MysteryCard = ({
         border: 10px solid;
         border-radius: 32px;
         display: flex;
-        align-items: center;
-        justify-content: center;
-        margin: 16px;
+        flex-direction: column;
         position: relative;
         opacity: 1;
         cursor: default;
         transition: all 0.3s ease;
         box-shadow: 0 0 0 4px var(--dot-color-transparent, #00000050);
+        overflow: hidden;
       }
       .inner-panel {
         position: absolute;
@@ -83,6 +90,53 @@ const MysteryCard = ({
         bottom: 26px;
         right: 26px;
       }
+      
+      /* Fixed title styling */
+      .fixed-title {
+        position: absolute;
+        top: 20px;
+        left: 0;
+        right: 0;
+        text-align: center;
+        z-index: 25;
+        pointer-events: none;
+      }
+      .fixed-title h3 {
+        font-family: 'Press Start 2P', monospace;
+        font-weight: 700;
+        font-size: 1.15rem;
+        text-transform: capitalize;
+        text-shadow: 2px 2px 0 #fff, 4px 4px 0 #000;
+        margin: 0;
+        letter-spacing: 1px;
+      }
+      
+      /* Scrollable content area */
+      .scrollable-content {
+        position: absolute;
+        top: 70px;
+        left: 20px;
+        right: 20px;
+        bottom: 20px;
+        z-index: 25;
+        overflow-y: auto;
+        pointer-events: auto; /* Enable pointer events for scrolling */
+        /* Hide scrollbar but keep functionality */
+        scrollbar-width: none; /* Firefox */
+        -ms-overflow-style: none; /* IE and Edge */
+      }
+      .scrollable-content::-webkit-scrollbar {
+        display: none; /* Chrome, Safari, Opera */
+      }
+      .scrollable-content p {
+        font-family: 'IBM Plex Mono', monospace;
+        font-size: 0.875rem;
+        color: #444;
+        line-height: 1.4;
+        margin: 0;
+        text-align: center;
+      }
+      
       .hover-question {
         position: absolute;
         inset: 0;
@@ -99,55 +153,39 @@ const MysteryCard = ({
         z-index: 20;
         pointer-events: none;
       }
-      .hover-details {
-        position: absolute;
-        inset: 0;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-        padding: 24px;
-        text-align: center;
-        opacity: 0;
-        transition: opacity 0.3s ease;
-        z-index: 30;
-        pointer-events: none;
-      }
+      
       .group:hover .hover-question {
         opacity: 0;
       }
-      .group:hover .hover-details {
+      .group:hover .fixed-title {
         opacity: 1;
       }
-      .hover-details h3 {
-        font-family: 'Press Start 2P', monospace;
-        font-weight: 700;
-        font-size: 1.15rem;
-        text-transform: capitalize;
-        text-shadow: 2px 2px 0 #fff, 4px 4px 0 #000;
-        margin: 0 0 12px;
-        letter-spacing: 1px;
+      .group:hover .scrollable-content {
+        opacity: 1;
       }
-      .hover-details p {
-        font-family: 'IBM Plex Mono', monospace;
-        font-size: 0.875rem;
-        color: #444;
-        line-height: 1.4;
-        margin: 0;
+      
+      /* Default state - show question mark, hide title and content */
+      .fixed-title {
+        opacity: 0;
+        transition: opacity 0.3s ease;
       }
+      .scrollable-content {
+        opacity: 0;
+        transition: opacity 0.3s ease;
+      }
+      
       @media (max-width: 1200px) {
         .mystery-card {
           width: 250px;
           height: 235px;
-          margin: 14px;
         }
-        .hover-question {
-          font-size: 4rem;
-        }
-        .hover-details h3 {
+        .fixed-title h3 {
           font-size: 1rem;
         }
-        .hover-details p {
+        .scrollable-content {
+          top: 60px;
+        }
+        .scrollable-content p {
           font-size: 0.8rem;
         }
       }
@@ -155,15 +193,14 @@ const MysteryCard = ({
         .mystery-card {
           width: 200px;
           height: 190px;
-          margin: 12px;
         }
-        .hover-question {
-          font-size: 3rem;
-        }
-        .hover-details h3 {
+        .fixed-title h3 {
           font-size: 0.85rem;
         }
-        .hover-details p {
+        .scrollable-content {
+          top: 50px;
+        }
+        .scrollable-content p {
           font-size: 0.7rem;
         }
       }
@@ -178,7 +215,6 @@ const MysteryCard = ({
     `}</style>
   </div>
 );
-
 
 interface CloudFloatOptions {
   baseTop: number;  // changed to number for calculation
