@@ -171,7 +171,7 @@ const LandingPage = () => {
     <div className="w-full min-h-screen flex flex-col mt-5 relative overflow-hidden">
       
       <a
-        href="https://instagram.com/microsoftinnovationsclub"
+        href="https://www.instagram.com/microsoft.innovations.vitc?igsh=Z2p6N25td2hzdTVi"
         target="_blank"
         rel="noopener noreferrer"
         className="absolute top-1 right-52 z-50"
@@ -201,7 +201,7 @@ const LandingPage = () => {
         />
       </a>
       <a
-        href="mailto:micvitcc@gmail.com"
+        href="mailto:mic.vit.chennai@gmail.com"
         target="_blank"
         rel="noopener noreferrer"
         className="absolute top-1 right-5 z-50"
